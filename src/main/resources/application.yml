@@ -1,4 +1,4 @@
-# Configuración principal
+# Configuracion principal
 spring:
   application:
     name: churn-insight-api
@@ -13,4 +13,4 @@ server:
 
 # Logging
 
-# Documentación OpenAPI
+# Documentacion OpenAPI

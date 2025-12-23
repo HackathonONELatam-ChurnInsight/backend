@@ -1,6 +1,6 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.dto.response;
 
 public record PredictionResponseDTO(
-    String predict,
+    String forecast,
     Double probability
 ) {}
