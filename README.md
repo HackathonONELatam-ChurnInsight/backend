@@ -1,1 +1,200 @@
-# backend
+# ChurnInsight API
+
+ChurnInsight es una API REST desarrollada con Spring Boot que predice si un cliente es propenso a cancelar un servicio (churn). Este proyecto fue desarrollado como parte del desafío para la Hackathon ONE.
+
+## 📋 Descripción
+
+ChurnInsight proporciona un servicio de predicción de churn que analiza diferentes características del cliente (edad, salario, balance, productos, género, estado de membresía, etc.) para determinar la probabilidad de que un cliente cancele su servicio.
+
+## 🛠️ Tecnologías Utilizadas
+
+- **Java 17**
+- **Spring Boot 4.0.1**
+- **Spring Web MVC**
+- **Spring Validation**
+- **Lombok**
+- **SpringDoc OpenAPI (Swagger)** - Para documentación de la API
+- **Maven** - Gestión de dependencias
+
+## 📦 Requisitos Previos
+
+- Java 17 o superior
+- Maven 3.6+ (o usar el wrapper incluido `mvnw`)
+- Un servicio de modelo Python ejecutándose (por defecto en `http://localhost:8000`)
+
+## 🚀 Instalación
+
+1. Clona el repositorio:
+```bash
+git clone <url-del-repositorio>
+cd backend
+```
+
+2. Compila el proyecto:
+```bash
+./mvnw clean install
+```
+
+3. Ejecuta la aplicación:
+```bash
+./mvnw spring-boot:run
+```
+
+O si prefieres usar Java directamente:
+```bash
+java -jar target/churninsight-0.0.1-SNAPSHOT.jar
+```
+
+## ⚙️ Configuración
+
+### Variables de Entorno
+
+La aplicación utiliza variables de entorno para la configuración. Puedes configurarlas de las siguientes maneras:
+
+| Variable | Descripción | Valor por Defecto |
+|----------|-------------|-------------------|
+| `SPRING_PROFILES_ACTIVE` | Perfil activo (dev/prod) | `dev` |
+| `SERVER_PORT` | Puerto del servidor | `8080` |
+| `MODEL_SERVICE_URL` | URL del servicio de modelo Python | `http://localhost:8000` |
+
+### Perfiles
+
+La aplicación soporta múltiples perfiles de configuración:
+
+- **dev**: Perfil de desarrollo (por defecto)
+- **prod**: Perfil de producción
+
+Los archivos de configuración se encuentran en `src/main/resources/`:
+- `application.yml` - Configuración base
+- `application-dev.yml` - Configuración de desarrollo
+- `application-prod.yml` - Configuración de producción
+
+## 📚 Documentación de la API
+
+Una vez que la aplicación esté ejecutándose, puedes acceder a la documentación interactiva de la API (Swagger UI) en:
+
+```
+http://localhost:8080/swagger-ui.html
+```
+
+O la especificación OpenAPI en formato JSON:
+```
+http://localhost:8080/v3/api-docs
+```
+
+## 🏗️ Estructura del Proyecto
+
+```
+backend/
+├── src/
+│   ├── main/
+│   │   ├── java/com/one/hackathonlatam/dic25equipo69/churninsight/
+│   │   │   ├── ChurninsightApplication.java      # Clase principal
+│   │   │   ├── client/
+│   │   │   │   └── ModelClientService.java       # Cliente para servicio de modelo
+│   │   │   ├── config/
+│   │   │   │   └── OpenApiConfig.java            # Configuración OpenAPI
+│   │   │   ├── controller/
+│   │   │   │   └── PredictionController.java    # Controlador REST
+│   │   │   ├── dto/
+│   │   │   │   ├── request/
+│   │   │   │   │   ├── PredictionRequestDTO.java # DTO de solicitud
+│   │   │   │   │   └── Gender.java               # Enum de género
+│   │   │   │   └── response/
+│   │   │   │       ├── PredictionResponseDTO.java # DTO de respuesta
+│   │   │   │       └── ErrorResponseDTO.java      # DTO de error
+│   │   │   ├── exception/
+│   │   │   │   └── GlobalExceptionHandler.java   # Manejador global de excepciones
+│   │   │   └── service/
+│   │   │       ├── IPredictionService.java       # Interfaz del servicio
+│   │   │       └── impl/
+│   │   │           └── PredictionService.java    # Implementación del servicio
+│   │   └── resources/
+│   │       ├── application.yml                    # Configuración base
+│   │       ├── application-dev.yml                # Configuración desarrollo
+│   │       └── application-prod.yml                # Configuración producción
+│   └── test/                                      # Tests unitarios
+├── pom.xml                                        # Configuración Maven
+├── mvnw                                           # Maven Wrapper (Linux/Mac)
+└── mvnw.cmd                                       # Maven Wrapper (Windows)
+```
+
+## 📡 Endpoints
+
+### Base URL
+```
+http://localhost:8080/api/v1
+```
+
+### Endpoints Disponibles
+
+Los endpoints están definidos en `PredictionController` y siguen el patrón REST.
+
+## 🔧 Desarrollo
+
+### Ejecutar en modo desarrollo
+
+```bash
+./mvnw spring-boot:run -Dspring-boot.run.profiles=dev
+```
+
+### Ejecutar tests
+
+```bash
+./mvnw test
+```
+
+### Compilar sin ejecutar tests
+
+```bash
+./mvnw clean install -DskipTests
+```
+
+## 📝 Modelo de Datos
+
+### PredictionRequestDTO
+
+Solicitud para realizar una predicción de churn:
+
+```java
+{
+    "complain": boolean,           // Si el cliente ha presentado quejas
+    "age": int,                    // Edad del cliente
+    "estimatedSalary": Double,     // Salario estimado
+    "numOfProducts": int,          // Número de productos
+    "balance": Double,              // Balance del cliente
+    "gender": String,               // Género (MALE/FEMALE)
+    "activeMember": boolean         // Si es miembro activo
+}
+```
+
+### PredictionResponseDTO
+
+Respuesta con la predicción:
+
+```java
+{
+    "forecast": String,            // Predicción (ej: "CHURN" o "NO_CHURN")
+    "probability": Double           // Probabilidad de la predicción
+}
+```
+
+## 🔌 Integración con Modelo Python
+
+La aplicación se conecta a un servicio de modelo Python externo. Asegúrate de que el servicio esté ejecutándose y accesible en la URL configurada en `MODEL_SERVICE_URL`.
+
+## 🐛 Manejo de Errores
+
+La aplicación incluye un manejador global de excepciones (`GlobalExceptionHandler`) que proporciona respuestas de error consistentes en formato JSON.
+
+## 📄 Licencia
+
+Este proyecto es desarrollado para la Hackathon ONE - Diciembre 2025, Equipo 69.
+
+## 👥 Equipo
+
+Desarrollado por el Equipo 69 para la Hackathon ONE.
+
+---
+
+**Nota**: Este proyecto está en desarrollo activo. Algunas funcionalidades pueden estar en proceso de implementación.
