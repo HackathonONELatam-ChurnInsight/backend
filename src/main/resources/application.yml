@@ -1,0 +1,16 @@
+# Configuracion principal
+spring:
+  application:
+    name: churn-insight-api
+
+  # Perfil activo
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+
+# Servidor
+server:
+  port: ${SERVER_PORT:8080}
+
+# Logging
+
+# Documentacion OpenAPI
