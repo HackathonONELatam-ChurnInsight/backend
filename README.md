@@ -154,7 +154,7 @@ Los endpoints están definidos en `PredictionController` y siguen el patrón RES
 
 ### PredictionRequestDTO
 
-Solicitud para realizar una predicción de churn. Todos los campos son obligatorios y deben enviarse con el tipo indicado.
+Solicitud para realizar una predicción de churn. **Los campos son opcionales**: puedes enviar los que tengas disponibles y el modelo intentará predecir con la información recibida. Si la ausencia de datos impide la predicción o la validación falla, la API devolverá un error (400) con un mensaje explicativo.
 
 Ejemplo (JSON):
 
