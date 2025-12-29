@@ -1,0 +1,14 @@
+{
+  "geography": "Spain",
+  "gender": "Male",
+  "age": null,
+  "creditScore": null,
+  "balance": null,
+  "estimatedSalary": null,
+  "tenure": null,
+  "numOfProducts": null,
+  "satisfactionScore": null,
+  "isActiveMember": null,
+  "hasCrCard": null,
+  "complain": null
+}

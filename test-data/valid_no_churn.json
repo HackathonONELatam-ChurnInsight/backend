@@ -1,0 +1,14 @@
+{
+  "geography": "Spain",
+  "gender": "Female",
+  "age": 29,
+  "creditScore": 740,
+  "balance": 50.0,
+  "estimatedSalary": 45000.0,
+  "tenure": 8,
+  "numOfProducts": 3,
+  "satisfactionScore": 5,
+  "isActiveMember": true,
+  "hasCrCard": true,
+  "complain": false
+}

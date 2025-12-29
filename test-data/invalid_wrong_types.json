@@ -1,0 +1,14 @@
+{
+  "geography": 123,
+  "gender": true,
+  "age": "twenty",
+  "creditScore": "six hundred",
+  "balance": "a lot",
+  "estimatedSalary": "forty",
+  "tenure": "two",
+  "numOfProducts": "three",
+  "satisfactionScore": "high",
+  "isActiveMember": "yes",
+  "hasCrCard": "no",
+  "complain": "false"
+}
