@@ -71,17 +71,12 @@ Los archivos de configuración se encuentran en `src/main/resources/`:
 
 ## 📚 Documentación de la API
 
-Una vez que la aplicación esté ejecutándose, puedes acceder a la documentación interactiva de la API (Swagger UI) en:
+La API incluye documentación OpenAPI (Springdoc) con ejemplos anotados en los endpoints.
 
-```
-http://localhost:8080/swagger-ui.html
-```
+- **Swagger UI (interactivo con ejemplos):** `http://localhost:8080/swagger-ui.html` (redirige a la UI actual y muestra los ejemplos de petición y respuesta).
+- **OpenAPI (JSON):** `http://localhost:8080/v3/api-docs`
 
-O la especificación OpenAPI en formato JSON:
-```
-http://localhost:8080/v3/api-docs
-```
-
+> Notas: los endpoints en `PredictionController` están anotados con `@Operation` y proveen ejemplos visibles en Swagger UI para facilitar pruebas rápidas.
 ## 🏗️ Estructura del Proyecto
 
 ```
@@ -154,30 +149,61 @@ Los endpoints están definidos en `PredictionController` y siguen el patrón RES
 
 ### PredictionRequestDTO
 
-Solicitud para realizar una predicción de churn:
+Solicitud para realizar una predicción de churn. **Los campos son opcionales**: puedes enviar los que tengas disponibles y el modelo intentará predecir con la información recibida. Si la ausencia de datos impide la predicción o la validación falla, la API devolverá un error (400) con un mensaje explicativo.
 
-```java
+Ejemplo (JSON):
+
+```json
 {
-    "complain": boolean,           // Si el cliente ha presentado quejas
-    "age": int,                    // Edad del cliente
-    "estimatedSalary": Double,     // Salario estimado
-    "numOfProducts": int,          // Número de productos
-    "balance": Double,              // Balance del cliente
-    "gender": String,               // Género (MALE/FEMALE)
-    "activeMember": boolean         // Si es miembro activo
+  "geography": "Spain",
+  "gender": "Male",
+  "age": 42,
+  "creditScore": 650,
+  "balance": 14.5,
+  "estimatedSalary": 14.0,
+  "tenure": 6,
+  "numOfProducts": 5,
+  "satisfactionScore": 2,
+  "isActiveMember": true,
+  "hasCrCard": true,
+  "complain": false
 }
 ```
+
+Campos:
+- `geography` (string) — País o región del cliente.
+- `gender` (string) — Género (ej.: `Male`, `Female`) según el dataset.
+- `age` (int) — Edad del cliente (entero positivo).
+- `creditScore` (int) — Puntaje de crédito (entero).
+- `balance` (float) — Balance de la cuenta.
+- `estimatedSalary` (float) — Salario estimado.
+- `tenure` (int) — Tiempo con la compañía (meses/periodos).
+- `numOfProducts` (int) — Número de productos contratados.
+- `satisfactionScore` (int) — Puntuación de satisfacción (ej.: escala 1-5).
+- `isActiveMember` (bool) — Si es miembro activo.
+- `hasCrCard` (bool) — Si posee tarjeta de crédito.
+- `complain` (bool) — Si ha presentado quejas.
 
 ### PredictionResponseDTO
 
-Respuesta con la predicción:
+Respuesta con la predicción.
 
-```java
+Ejemplo (200 OK):
+
+```json
 {
-    "forecast": String,            // Predicción (ej: "CHURN" o "NO_CHURN")
-    "probability": Double           // Probabilidad de la predicción
+  "forecast": "Va a cancelar",
+  "probability": 0.81
 }
 ```
+
+Campos de respuesta:
+- `forecast` (string) — Etiqueta o mensaje de la predicción (ej.: `Va a cancelar`, `No cancelará`).
+- `probability` (float) — Valor entre `0.0` y `1.0` que indica la probabilidad de la predicción.
+
+Notas:
+- Respuestas de error (400/422/500) siguen el formato definido por `GlobalExceptionHandler` (ej.: `timestamp`, `status`, `error`, `message`, `path`).
+- Asegúrate de enviar todos los campos con el tipo correcto para evitar errores de validación.
 
 ## 🔌 Integración con Modelo Python
 
