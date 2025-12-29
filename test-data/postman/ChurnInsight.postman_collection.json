@@ -1,13 +1,13 @@
 {
   "info": {
-    "name": "ChurnInsight - Predict tests",
+    "name": "ChurnInsight - Pruebas /predict",
     "_postman_id": "churninsight-collection-1",
-    "description": "Requests to test /api/v1/predict with valid and invalid payloads",
+    "description": "Peticiones para probar /api/v1/predict con cargas válidas e inválidas",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Valid - churn 1",
+      "name": "Válido - churn (1)",
       "request": {
         "method": "POST",
         "header": [
@@ -21,62 +21,62 @@
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
-              "pm.test('Body has forecast and probability', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });"
+              "pm.test('Estado 200', function () { pm.response.to.have.status(200); });",
+              "pm.test('Cuerpo contiene \"forecast\" y \"probability\"', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });"
             ]
           }
         }
       ]
     },
     {
-      "name": "Valid - churn 2",
+      "name": "Válido - churn (2)",
       "request": {
         "method": "POST",
         "header": [ { "key": "Content-Type", "value": "application/json" } ],
         "body": { "mode": "raw", "raw": "{{raw_valid_churn_2}}" },
         "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Status is 200', function () { pm.response.to.have.status(200); });", "pm.test('Body has forecast and probability', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });" ] } } ]
+      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Estado 200', function () { pm.response.to.have.status(200); });", "pm.test('Cuerpo contiene \"forecast\" y \"probability\"', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });" ] } } ]
     },
     {
-      "name": "Valid - no churn",
+      "name": "Válido - no churn",
       "request": {
         "method": "POST",
         "header": [ { "key": "Content-Type", "value": "application/json" } ],
         "body": { "mode": "raw", "raw": "{{raw_valid_no_churn}}" },
         "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Status is 200', function () { pm.response.to.have.status(200); });", "pm.test('Body has forecast and probability', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });" ] } } ]
+      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Estado 200', function () { pm.response.to.have.status(200); });", "pm.test('Cuerpo contiene \"forecast\" y \"probability\"', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });" ] } } ]
     },
     {
-      "name": "Invalid - wrong types",
+      "name": "Inválido - tipos incorrectos",
       "request": {
         "method": "POST",
         "header": [ { "key": "Content-Type", "value": "application/json" } ],
         "body": { "mode": "raw", "raw": "{{raw_invalid_wrong_types}}" },
         "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Expect 400 or validation error', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
+      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Esperar 400 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
     },
     {
-      "name": "Invalid - missing numeric",
+      "name": "Inválido - campos numéricos faltantes",
       "request": {
         "method": "POST",
         "header": [ { "key": "Content-Type", "value": "application/json" } ],
         "body": { "mode": "raw", "raw": "{{raw_invalid_missing_numeric}}" },
         "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Expect 400 or validation error', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
+      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Esperar 400 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
     },
     {
-      "name": "Invalid - out of range",
+      "name": "Inválido - fuera de rango",
       "request": {
         "method": "POST",
         "header": [ { "key": "Content-Type", "value": "application/json" } ],
         "body": { "mode": "raw", "raw": "{{raw_invalid_out_of_range}}" },
         "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Expect 400 or validation error', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
+      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Esperar 400 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
     }
   ],
   "variable": [

@@ -1,28 +1,28 @@
-# Test data for ChurnInsight API ✅
+# Datos de prueba para ChurnInsight API ✅
 
-This folder contains example requests, validation-error cases and a Postman collection to test the `/api/v1/predict` endpoint.
+Esta carpeta contiene ejemplos de peticiones, casos de error de validación y una colección de Postman para probar el endpoint `/api/v1/predict`.
 
-Files:
+Archivos:
 
-- `valid_churn_1.json` — Example expected to produce **churn** (high probability). Use for positive churn tests.
-- `valid_churn_2.json` — Another churn-positive example.
-- `valid_no_churn.json` — Example expected to produce **no churn** (low probability).
+- `valid_churn_1.json` — Ejemplo que debería producir **churn** (alta probabilidad). Úsalo para pruebas con churn positivo.
+- `valid_churn_2.json` — Otro ejemplo con churn esperado.
+- `valid_no_churn.json` — Ejemplo que debería producir **no churn** (baja probabilidad).
 
-Validation cases (invalid inputs to test API validation behavior):
-- `invalid_wrong_types.json` — Fields with wrong types (strings where numbers expected, booleans where strings expected).
-- `invalid_missing_numeric.json` — Numeric fields set to `null` to simulate missing numeric input.
-- `invalid_out_of_range.json` — Implausible values (negative ages, extremely large credit score, negative balances).
+Casos de validación (entradas inválidas para probar el comportamiento de validación):
+- `invalid_wrong_types.json` — Campos con tipos incorrectos (strings donde se esperan números, booleanos donde se esperan strings).
+- `invalid_missing_numeric.json` — Campos numéricos en `null` para simular entradas faltantes.
+- `invalid_out_of_range.json` — Valores poco plausibles (edad negativa, creditScore extremadamente alto, balances negativos).
 
-Expected results (ideal behaviour):
-- Valid churn examples → Response `200` with JSON containing `forecast` (string) and `probability` (double between 0.0 and 1.0); `probability` should be high (e.g., ≥ 0.7).
-- Valid no-churn example → Response `200` with `probability` low (e.g., ≤ 0.3) and `forecast` indicating no churn.
-- Invalid inputs → Response `400` with an error payload similar to `ErrorResponseDTO` (contains `message` and `details`) or an appropriate validation error response.
+Resultados esperados (comportamiento ideal):
+- Ejemplos válidos con churn → Respuesta `200` con JSON que contenga `forecast` (string) y `probability` (double entre 0.0 y 1.0); `probability` debería ser alta (p. ej., ≥ 0.7).
+- Ejemplo válido sin churn → Respuesta `200` con `probability` baja (p. ej., ≤ 0.3) y `forecast` indicando no churn.
+- Entradas inválidas → Respuesta `400` con un payload de error similar a `ErrorResponseDTO` (contiene `message` y `details`) o una respuesta de validación adecuada.
 
-Note: The current project includes a placeholder implementation that returns a sample response for predict requests. The tests in the Postman collection assert structural correctness (status code, presence and type of `forecast` and `probability`) and assert `400` for invalid cases. If you want strict model-dependent assertions (e.g. exact probability thresholds), adjust the Postman tests to your model's behaviour.
+Nota: La implementación actual devuelve una respuesta de ejemplo para las peticiones `predict`. Las pruebas en la colección Postman comprueban la estructura (código de estado, presencia y tipo de `forecast` y `probability`) y esperan `400` para los casos inválidos. Si deseas aserciones estrictas dependientes del modelo (por ejemplo, umbrales exactos de probabilidad), ajusta las pruebas en Postman al comportamiento de tu modelo.
 
-Usage:
-- Import `postman/ChurnInsight.postman_collection.json` into Postman and run the requests or add them to a collection runner.
+Uso:
+- Importa `postman/ChurnInsight.postman_collection.json` en Postman y ejecuta las peticiones o úsalas en el Collection Runner.
 
 ---
 
-Created by automation — feel free to modify examples, add more cases, or convert to Insomnia format.
+Creado por automatización — siéntete libre de modificar ejemplos, añadir más casos o convertirlos al formato Insomnia.
