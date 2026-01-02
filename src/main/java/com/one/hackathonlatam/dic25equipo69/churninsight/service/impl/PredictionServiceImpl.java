@@ -21,6 +21,15 @@ public class PredictionServiceImpl implements IPredictionService {
     @Override
     public PredictionResponseDTO predict(PredictionRequestDTO request) {
         // Llama al cliente del modelo DS (Python)
-        return modelClientService.predict(request);
+        //return modelClientService.predict(request);
+
+        //*
+        // SIMULACIÓN (MOCK)
+        // Simulamos una probabilidad lógica basada en la edad para que parezca real
+        String forecast = (request.age() > 50) ? "CHURN" : "NO_CHURN";
+        Double probability = (request.age() > 50) ? 0.85 : 0.15;
+
+        return new PredictionResponseDTO(forecast, probability);
+        //*/
     }
 }

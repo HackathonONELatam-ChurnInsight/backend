@@ -8,54 +8,54 @@ import jakarta.validation.constraints.*;
  */
 public record PredictionRequestDTO(
 
-        @NotNull(message = "geography es obligatorio")
-        @NotBlank(message = "geography no puede estar vacío")
+        @NotNull(message = "El campo 'geography' es obligatorio")
+        @Pattern(regexp = "France|Spain|Germany", message = "El campo 'geography' debe ser: France, Spain o Germany")
         String geography,
 
-        @NotNull(message = "gender es obligatorio")
-        @Pattern(regexp = "Male|Female", message = "gender debe ser 'Male' o 'Female'")
+        @NotNull(message = "El campo 'gender' es obligatorio")
+        @Pattern(regexp = "Male|Female", message = "El campo 'gender' debe ser: Male o Female")
         String gender,
 
-        @NotNull(message = "age es obligatorio")
-        @Min(value = 0, message = "age debe ser >= 0")
-        @Max(value = 120, message = "age debe ser <= 120")
+        @NotNull(message = "El campo 'age' es obligatorio")
+        @Min(value = 18, message = "La edad mínima permitida es 18 años")
+        @Max(value = 100, message = "La edad máxima permitida es 100 años")
         Integer age,
 
-        @NotNull(message = "creditScore es obligatorio")
-        @Min(value = 0, message = "creditScore debe ser >= 0")
-        @Max(value = 1000, message = "creditScore debe ser <= 1000")
+        @NotNull(message = "El campo 'creditScore' es obligatorio")
+        @Min(value = 350, message = "El creditScore mínimo es 350")
+        @Max(value = 850, message = "El creditScore máximo es 850")
         Integer creditScore,
 
-        @NotNull(message = "balance es obligatorio")
-        @DecimalMin(value = "0.0", inclusive = true, message = "balance debe ser >= 0")
+        @NotNull(message = "El campo 'balance' es obligatorio")
+        @DecimalMin(value = "0.0", inclusive = true, message = "El balance no puede ser negativo")
         Double balance,
 
-        @NotNull(message = "estimatedSalary es obligatorio")
-        @DecimalMin(value = "0.0", inclusive = true, message = "estimatedSalary debe ser >= 0")
+        @NotNull(message = "El campo 'estimatedSalary' es obligatorio")
+        @DecimalMin(value = "0.0", inclusive = true, message = "El salario estimado no puede ser negativo")
         Double estimatedSalary,
 
-        @NotNull(message = "tenure es obligatorio")
-        @Min(value = 0, message = "tenure debe ser >= 0")
-        @Max(value = 50, message = "tenure debe ser <= 50")
+        @NotNull(message = "El campo 'tenure' es obligatorio")
+        @Min(value = 0, message = "La antigüedad (tenure) mínima es 0")
+        @Max(value = 10, message = "La antigüedad (tenure) máxima según DS es 10 años")
         Integer tenure,
 
-        @NotNull(message = "numOfProducts es obligatorio")
-        @Min(value = 0, message = "numOfProducts debe ser >= 0")
-        @Max(value = 5, message = "numOfProducts debe ser <= 5")
+        @NotNull(message = "El campo 'numOfProducts' es obligatorio")
+        @Min(value = 1, message = "El número mínimo de productos es 1")
+        @Max(value = 4, message = "El número máximo de productos es 4")
         Integer numOfProducts,
 
-        @NotNull(message = "satisfactionScore es obligatorio")
-        @Min(value = 0, message = "satisfactionScore debe ser >= 0")
-        @Max(value = 5, message = "satisfactionScore debe ser <= 5")
+        @NotNull(message = "El campo 'satisfactionScore' es obligatorio")
+        @Min(value = 1, message = "El satisfactionScore mínimo es 1")
+        @Max(value = 5, message = "El satisfactionScore máximo es 5")
         Integer satisfactionScore,
 
-        @NotNull(message = "isActiveMember es obligatorio")
+        @NotNull(message = "El campo 'isActiveMember' es obligatorio")
         Boolean isActiveMember,
 
-        @NotNull(message = "hasCrCard es obligatorio")
+        @NotNull(message = "El campo 'hasCrCard' es obligatorio")
         Boolean hasCrCard,
 
-        @NotNull(message = "complain es obligatorio")
+        @NotNull(message = "El campo 'complain' es obligatorio")
         Boolean complain
 
 ) {}

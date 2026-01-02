@@ -5,3 +5,11 @@ model:
     timeout: 5000
 
 # Logging
+logging:
+  level:
+    root: INFO
+    com.one.hackathonlatam.dic25equipo69.churninsight: DEBUG
+  file:
+    name: logs/churn-insight-dev.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
