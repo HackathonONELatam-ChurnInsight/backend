@@ -22,8 +22,8 @@ public record PredictionRequestDTO(
         Integer age,
 
         @NotNull(message = "El campo 'creditScore' es obligatorio")
-        @Min(value = 350, message = "El creditScore mínimo es 350")
-        @Max(value = 850, message = "El creditScore máximo es 850")
+        @Min(value = 100, message = "El creditScore mínimo es 100")
+        @Max(value = 1000, message = "El creditScore máximo es 1000")
         Integer creditScore,
 
         @NotNull(message = "El campo 'balance' es obligatorio")
@@ -36,7 +36,7 @@ public record PredictionRequestDTO(
 
         @NotNull(message = "El campo 'tenure' es obligatorio")
         @Min(value = 0, message = "La antigüedad (tenure) mínima es 0")
-        @Max(value = 10, message = "La antigüedad (tenure) máxima según DS es 10 años")
+        @Max(value = 50, message = "La antigüedad (tenure) máxima es 50 años")
         Integer tenure,
 
         @NotNull(message = "El campo 'numOfProducts' es obligatorio")
