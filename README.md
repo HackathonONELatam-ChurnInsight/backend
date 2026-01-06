@@ -71,16 +71,12 @@ Los archivos de configuración se encuentran en `src/main/resources/`:
 
 ## 📚 Documentación de la API
 
-Una vez que la aplicación esté ejecutándose, puedes acceder a la documentación interactiva de la API (Swagger UI) en:
+La API incluye documentación OpenAPI (Springdoc) con ejemplos anotados en los endpoints.
 
-```
-http://localhost:8080/swagger-ui.html
-```
+- **Swagger UI (interactivo con ejemplos):** `http://localhost:8080/swagger-ui.html` (redirige a la UI actual y muestra los ejemplos de petición y respuesta).
+- **OpenAPI (JSON):** `http://localhost:8080/v3/api-docs`
 
-O la especificación OpenAPI en formato JSON:
-```
-http://localhost:8080/v3/api-docs
-```
+> Notas: los endpoints en `PredictionController` están anotados con `@Operation` y proveen ejemplos visibles en Swagger UI para facilitar pruebas rápidas.
 
 ## 🏗️ Arquitectura de la solución
 
