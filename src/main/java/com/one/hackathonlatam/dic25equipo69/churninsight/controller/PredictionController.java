@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Controller para endpoint de predicción de churn
  * POST /api/v1/predict
  */
+@Slf4j
 @RestController
 @RequestMapping("/api/v1")
 public class PredictionController {
@@ -58,7 +60,12 @@ public class PredictionController {
     })
     @PostMapping(path = "/predict", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PredictionResponseDTO> predict(@Valid @RequestBody PredictionRequestDTO request) {
+        log.info("Recibida solicitud de predicción para cliente con geografía: {} y edad: {}", 
+                request.geography(), request.age());
+        
         PredictionResponseDTO response = predictionService.predict(request);
+        
+        log.info("Predicción completada exitosamente: {}", response.forecast());
         return ResponseEntity.ok(response);
     }
 }
