@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(MockitoExtension.class)
 class PredictionServiceMockImplTest {
 
-    private final PredictionServiceMockImpl service = new PredictionServiceMockImpl(null);
+    private final PredictionServiceMockImpl service = new PredictionServiceMockImpl();
 
     @Test
     void predict_AgeOver50_ReturnsChurn() {

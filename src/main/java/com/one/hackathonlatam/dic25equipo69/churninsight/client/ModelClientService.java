@@ -4,6 +4,7 @@ import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionR
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
  * Cliente HTTP para microservicio Python DS (http://localhost:8000/predict)
  * Implementado con RestTemplate para compatibilidad con Spring Web MVC.
  */
+@Profile("prod")
 @Slf4j
 @Component
 public class ModelClientService {
@@ -38,7 +40,7 @@ public class ModelClientService {
 
         try {
             PredictionResponseDTO response = restTemplate.postForObject(
-                    modelServiceUrl,
+                    modelServiceUrl + "/predict",
                     entity,
                     PredictionResponseDTO.class
             );
