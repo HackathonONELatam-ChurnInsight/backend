@@ -17,7 +17,7 @@ public record PredictionRequestDTO(
         Geography geography,
 
         @Schema(description = "Género del cliente", example = "Male")
-        @NotNull(message = "El campo 'gender' es obligatorio")
+        // campo opcional
         Gender gender,
 
         @Schema(description = "Edad del cliente (entero)", example = "42")
@@ -38,14 +38,14 @@ public record PredictionRequestDTO(
         Double balance,
 
         @Schema(description = "Salario estimado", example = "14.0")
-        @NotNull(message = "El campo 'estimatedSalary' es obligatorio")
+        // campo opcional
         @DecimalMin(value = "0.0", inclusive = true, message = "El salario estimado no puede ser negativo")
         Double estimatedSalary,
 
         @Schema(description = "Tiempo con la compañía (meses)", example = "6")
-        @NotNull(message = "El campo 'tenure' es obligatorio")
+        // campo opcional
         @Min(value = 0, message = "La antigüedad (tenure) mínima es 0")
-        @Max(value = 50, message = "La antigüedad (tenure) máxima es 50 años")
+        @Max(value = 20, message = "La antigüedad (tenure) máxima es 20 años")
         Integer tenure,
 
         @Schema(description = "Número de productos contratados", example = "5")
@@ -65,7 +65,7 @@ public record PredictionRequestDTO(
         Boolean isActiveMember,
 
         @Schema(description = "Si tiene tarjeta de crédito", example = "true")
-        @NotNull(message = "El campo 'hasCrCard' es obligatorio")
+        // campo opcional
         Boolean hasCrCard,
 
         @Schema(description = "Si ha presentado quejas", example = "false")
