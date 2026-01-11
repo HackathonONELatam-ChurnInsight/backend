@@ -4,6 +4,7 @@ import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.ErrorRespo
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -35,6 +36,20 @@ public class GlobalExceptionHandler {
                 .build();
 
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDTO> handleJsonParseException(
+            HttpMessageNotReadableException ex) {
+        log.error("Error en el cuerpo de la petición: {}", ex.getMessage());
+        ErrorResponseDTO response = ErrorResponseDTO.builder()
+                .error("Error en la petición")
+                .message("El cuerpo de la petición es inválido")
+                .details(List.of(ex.getMostSpecificCause().getMessage()))
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return ResponseEntity.badRequest().body(response);
     }
 
     @ExceptionHandler(RestClientException.class)

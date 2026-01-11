@@ -1,5 +1,7 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.dto.request;
 
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
@@ -12,13 +14,11 @@ public record PredictionRequestDTO(
 
         @Schema(description = "País o región del cliente", example = "Spain")
         @NotNull(message = "El campo 'geography' es obligatorio")
-        @Pattern(regexp = "France|Spain|Germany", message = "El campo 'geography' debe ser: France, Spain o Germany")
-        String geography,
+        Geography geography,
 
         @Schema(description = "Género del cliente", example = "Male")
         @NotNull(message = "El campo 'gender' es obligatorio")
-        @Pattern(regexp = "Male|Female", message = "El campo 'gender' debe ser: Male o Female")
-        String gender,
+        Gender gender,
 
         @Schema(description = "Edad del cliente (entero)", example = "42")
         @NotNull(message = "El campo 'age' es obligatorio")
