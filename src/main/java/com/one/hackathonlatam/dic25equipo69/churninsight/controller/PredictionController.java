@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Slf4j
 @RestController
-@RequestMapping("/api/v1")
+@RequestMapping("/predict")
 public class PredictionController {
 
     private static final String EXAMPLE_REQUEST = "{\n  \"geography\": \"Spain\",\n  \"gender\": \"Male\",\n  \"age\": 42,\n  \"creditScore\": 650,\n  \"balance\": 14.5,\n  \"estimatedSalary\": 14.0,\n  \"tenure\": 6,\n  \"numOfProducts\": 5,\n  \"satisfactionScore\": 2,\n  \"isActiveMember\": true,\n  \"hasCrCard\": true,\n  \"complain\": false\n}";
@@ -58,7 +58,7 @@ public class PredictionController {
             ),
             @ApiResponse(responseCode = "400", description = "Petición inválida / error de validación")
     })
-    @PostMapping(path = "/predict", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PredictionResponseDTO> predict(@Valid @RequestBody PredictionRequestDTO request) {
         log.info("Recibida solicitud de predicción para cliente con geografía: {} y edad: {}", 
                 request.geography(), request.age());
