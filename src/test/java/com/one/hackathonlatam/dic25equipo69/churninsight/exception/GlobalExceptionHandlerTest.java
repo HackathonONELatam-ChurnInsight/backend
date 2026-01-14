@@ -2,6 +2,8 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import com.one.hackathonlatam.dic25equipo69.churninsight.service.IPredictionService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +37,14 @@ class GlobalExceptionHandlerTest {
     void handleRestClientException_ReturnsServiceUnavailable() throws Exception {
         // Given
         PredictionRequestDTO request = new PredictionRequestDTO(
-            "France", "Male", 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
+            Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
         );
 
         when(predictionService.predict(any(PredictionRequestDTO.class)))
             .thenThrow(new org.springframework.web.client.RestClientException("Connection failed"));
 
         // When & Then
-        mockMvc.perform(post("/api/v1/predict")
+        mockMvc.perform(post("/predict")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isServiceUnavailable())
@@ -54,14 +56,14 @@ class GlobalExceptionHandlerTest {
     void handleGenericException_ReturnsInternalServerError() throws Exception {
         // Given
         PredictionRequestDTO request = new PredictionRequestDTO(
-            "France", "Male", 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
+            Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
         );
 
         when(predictionService.predict(any(PredictionRequestDTO.class)))
             .thenThrow(new RuntimeException("Unexpected error"));
 
         // When & Then
-        mockMvc.perform(post("/api/v1/predict")
+        mockMvc.perform(post("/predict")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isInternalServerError())

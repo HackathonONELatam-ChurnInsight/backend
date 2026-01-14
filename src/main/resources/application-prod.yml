@@ -1,5 +1,47 @@
 # Configuracion del modelo Python
+# CONFIGURACION PRODUCCION - POSTGRESQL
+spring:
+  # PostgreSQL Database
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/churninsight_prod}
+    username: ${DATABASE_USERNAME:churninsight_user}
+    password: ${DATABASE_PASSWORD:churninsight_pass}
+    driverClassName: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      idle-timeout: 300000
+      max-lifetime: 1200000
+      connection-timeout: 30000
+      leak-detection-threshold: 60000
+
+  # JPA/Hibernate
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+
+  # Inicialización de BD
+  sql:
+    init:
+      mode: never
+
+# Configuracion del modelo Python
 model:
   service:
     url: ${MODEL_SERVICE_URL:http://localhost:8000}
     timeout: 5000
+
+# Logging
+logging:
+  level:
+    root: WARN
+    com.one.hackathonlatam.dic25equipo69.churninsight: INFO
