@@ -1,6 +1,8 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.dto;
 
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -22,7 +24,7 @@ class PredictionRequestDTOTest {
 
     private PredictionRequestDTO buildValidRequest() {
         return new PredictionRequestDTO(
-                "France", "Male", 30, 600, 50000.0, 100000.0,
+                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0,
                 5, 2, 4, true, true, false
         );
     }
@@ -34,21 +36,21 @@ class PredictionRequestDTOTest {
     }
 
     @Test
-    void geographyOutsideAllowedValues_ShouldRaisePatternViolation() {
+    void nullGeography_ShouldRaiseNotNullViolation() {
         PredictionRequestDTO invalid = new PredictionRequestDTO(
-                "Brazil", "Male", 30, 600, 50000.0, 100000.0,
+                null, Gender.MALE, 30, 600, 50000.0, 100000.0,
                 5, 2, 4, true, true, false
         );
 
         assertThat(validator.validate(invalid))
                 .extracting(ConstraintViolation::getMessage)
-                .contains("El campo 'geography' debe ser: France, Spain o Germany");
+                .contains("El campo 'geography' es obligatorio");
     }
 
     @Test
     void ageBelowMinimum_ShouldRaiseConstraintViolation() {
         PredictionRequestDTO invalid = new PredictionRequestDTO(
-                "France", "Male", 17, 600, 50000.0, 100000.0,
+                Geography.FRANCE, Gender.MALE, 17, 600, 50000.0, 100000.0,
                 5, 2, 4, true, true, false
         );
 
@@ -60,7 +62,7 @@ class PredictionRequestDTOTest {
     @Test
     void nullActiveMember_ShouldRaiseNotNullViolation() {
         PredictionRequestDTO invalid = new PredictionRequestDTO(
-                "France", "Male", 30, 600, 50000.0, 100000.0,
+                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0,
                 5, 2, 4, null, true, false
         );
 
