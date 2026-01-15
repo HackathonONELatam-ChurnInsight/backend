@@ -1,7 +1,7 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.client;
 
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
@@ -30,19 +30,19 @@ public class ModelClientService {
         this.modelServiceUrl = modelServiceUrl;
     }
 
-    public PredictionResponseDTO predict(PredictionRequestDTO request) {
+    public MLPredictionResponseDTO predict(MLPredictionRequestDTO request) {
         log.debug("Enviando petición al modelo DS en la URL: {}", modelServiceUrl);
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<PredictionRequestDTO> entity = new HttpEntity<>(request, headers);
+        HttpEntity<MLPredictionRequestDTO> entity = new HttpEntity<>(request, headers);
 
         try {
-            PredictionResponseDTO response = restTemplate.postForObject(
+            MLPredictionResponseDTO response = restTemplate.postForObject(
                     modelServiceUrl + "/predict",
                     entity,
-                    PredictionResponseDTO.class
+                    MLPredictionResponseDTO.class
             );
             log.debug("Respuesta recibida del modelo: {}", response);
             return response;

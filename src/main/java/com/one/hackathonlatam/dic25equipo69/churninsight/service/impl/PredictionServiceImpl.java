@@ -1,5 +1,7 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.service.impl;
 
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
 import org.springframework.context.annotation.Profile;
 import com.one.hackathonlatam.dic25equipo69.churninsight.client.ModelClientService;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
@@ -22,7 +24,14 @@ public class PredictionServiceImpl implements IPredictionService {
 
     @Override
     public PredictionResponseDTO predict(PredictionRequestDTO request) {
+
+        MLPredictionRequestDTO mlRequest = MLPredictionRequestDTO.from(request);
+
         // Llama al cliente del modelo DS (Python)
-        return modelClientService.predict(request);
+        MLPredictionResponseDTO mlResponse = modelClientService.predict(mlRequest);
+
+        PredictionResponseDTO response = mlResponse.toPredictionResponseDTO();
+
+        return response;
     }
 }

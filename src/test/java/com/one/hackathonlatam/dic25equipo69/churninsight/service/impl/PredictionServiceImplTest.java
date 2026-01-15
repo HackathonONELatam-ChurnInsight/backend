@@ -1,6 +1,7 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.service.impl;
 
 import com.one.hackathonlatam.dic25equipo69.churninsight.client.ModelClientService;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
@@ -30,9 +31,9 @@ class PredictionServiceImplTest {
         PredictionRequestDTO request = new PredictionRequestDTO(
             Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
         );
-        PredictionResponseDTO expectedResponse = new PredictionResponseDTO("NO_CHURN", 0.25);
+        PredictionResponseDTO expectedResponse = new PredictionResponseDTO("No va a cancelar", 0.25);
 
-        when(modelClientService.predict(any(PredictionRequestDTO.class))).thenReturn(expectedResponse);
+        when(modelClientService.predict(any(MLPredictionRequestDTO.class)).toPredictionResponseDTO()).thenReturn(expectedResponse);
 
         // When
         PredictionResponseDTO response = service.predict(request);
