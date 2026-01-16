@@ -38,7 +38,7 @@ class PredictEndpointIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.forecast").value("NO_CHURN"))
+                .andExpect(jsonPath("$.forecast").value("No va a cancelar"))
                 .andExpect(jsonPath("$.probability").value(0.15));
     }
 

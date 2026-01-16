@@ -2,7 +2,7 @@
 spring:
   # H2 Database
   datasource:
-    url: jdbc:h2:mem:churninsight_dev
+    url: jdbc:h2:file:./data/churninsight_dev
     driverClassName: org.h2.Driver
     username: sa
     password: 

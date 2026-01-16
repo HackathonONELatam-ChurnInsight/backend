@@ -1,0 +1,36 @@
+spring:
+  application:
+    name: churn-insight-api-test
+
+  # Servidor para tests
+  server:
+    port: 0
+
+  # H2 in-memory para tests
+  datasource:
+    url: jdbc:h2:mem:churninsight_test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ''
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+    database-platform: org.hibernate.dialect.H2Dialect
+
+  # Logging mínimo
+  main:
+    banner-mode: off
+    web-application-type: servlet
+
+# Configuración Test específica
+churninsight:
+  model:
+    service:
+      url: http://localhost:9999/mock
+      timeout: 5000
+
+logging:
+  level:
+    root: WARN
+    com.one.hackathonlatam.dic25equipo69.churninsight: DEBUG

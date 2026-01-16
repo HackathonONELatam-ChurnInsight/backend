@@ -3,6 +3,7 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.service.impl;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Customer;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Prediction;
@@ -76,6 +77,14 @@ public class PredictionPersistenceService {
         return saved;
     }
 
+    @Transactional
+    public Prediction saveMlPrediction(PredictionRequestDTO request, MLPredictionResponseDTO mlResponse) {
+        log.debug("Persistencia ML real: forecast={}, probability={}",
+                mlResponse.forecast(), mlResponse.probability());
+        PredictionResponseDTO response = mlResponse.toPredictionResponseDTO();
+        return savePrediction(request, response);  // Reusa lógica
+    }
+
     /**
      * Obtiene o crea un Customer usando MapStruct.
      */
@@ -100,8 +109,11 @@ public class PredictionPersistenceService {
     }
 
     private Boolean determinePredictionResult(String forecast) {
-        return forecast != null && forecast.toLowerCase().contains("cancelar");
+        if (forecast == null) return false;
+        String lower = forecast.toLowerCase();
+        return lower.startsWith("va a cancelar");
     }
+
 
     @Transactional(readOnly = true)
     public List<Prediction> getCustomerHistory(Long customerId) {

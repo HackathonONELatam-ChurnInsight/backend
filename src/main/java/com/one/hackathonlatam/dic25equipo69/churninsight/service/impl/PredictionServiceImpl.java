@@ -46,7 +46,7 @@ public class PredictionServiceImpl implements IPredictionService {
             PredictionResponseDTO response = mlResponse.toPredictionResponseDTO();
 
             // 4. Persistir predicción automáticamente
-            Prediction savedPrediction = persistenceService.savePrediction(request, response);
+            Prediction savedPrediction = persistenceService.saveMlPrediction(request, mlResponse);
             log.info("Predicción persistida exitosamente con ID={}", savedPrediction.getId());
 
             return response;

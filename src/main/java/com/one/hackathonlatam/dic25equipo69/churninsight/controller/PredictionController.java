@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/predict")
 public class PredictionController {
 
-    private static final String EXAMPLE_REQUEST = "{\n  \"geography\": \"Spain\",\n  \"gender\": \"Male\",\n  \"age\": 42,\n  \"creditScore\": 650,\n  \"balance\": 14.5,\n  \"estimatedSalary\": 14.0,\n  \"tenure\": 6,\n  \"numOfProducts\": 5,\n  \"satisfactionScore\": 2,\n  \"isActiveMember\": true,\n  \"hasCrCard\": true,\n  \"complain\": false\n}";
+    private static final String EXAMPLE_REQUEST = "{\n  \"geography\": \"Spain\",\n  \"gender\": \"Male\",\n  \"age\": 42,\n  \"creditScore\": 650,\n  \"balance\": 14.5,\n  \"estimatedSalary\": 14.0,\n  \"tenure\": 6,\n  \"numOfProducts\": 3,\n  \"satisfactionScore\": 2,\n  \"isActiveMember\": true,\n  \"hasCrCard\": true,\n  \"complain\": false\n}";
     private final IPredictionService predictionService;
 
     public PredictionController(IPredictionService predictionService) {
