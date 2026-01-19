@@ -1,12 +1,18 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.service.impl;
 
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.ImpactDirection;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.FeatureImportanceResponseDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionFullResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Prediction;
 import com.one.hackathonlatam.dic25equipo69.churninsight.service.IPredictionService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Implementación mock del servicio de predicción para desarrollo.
@@ -39,5 +45,76 @@ public class PredictionServiceMockImpl implements IPredictionService {
         log.info("Predicción MOCK persistida con ID={}", savedPrediction.getId());
 
         return response;
+    }
+
+    @Override
+    public PredictionFullResponseDTO predictWithExplanation(PredictionRequestDTO request) {
+        log.debug("Usando predicción MOCK CON EXPLICABILIDAD para desarrollo");
+
+        // Predicción simulada basada en satisfactionScore
+        boolean willChurn = request.satisfactionScore() < 3;
+        double probability = willChurn ? 0.85 : 0.25;
+        String forecast = willChurn ? "Va a cancelar" : "No va a cancelar";
+
+        // Generar top 3 features mock basados en los datos del request
+        List<FeatureImportanceResponseDTO> topFeatures = generateMockTopFeatures(request, willChurn);
+
+        PredictionFullResponseDTO response = new PredictionFullResponseDTO(
+                forecast,
+                probability,
+                topFeatures
+        );
+
+        log.info("Predicción MOCK con explicabilidad generada: forecast={}, features={}",
+                forecast, topFeatures.size());
+
+        // NOTA: No persistimos automáticamente aquí porque no tenemos MLPredictionFullResponseDTO real
+        // En desarrollo, podrías agregar persistencia mock si lo necesitas
+
+        return response;
+    }
+
+    /**
+     * Genera top 3 features mock para desarrollo basándose en los datos del request.
+     * La lógica simula qué variables serían más relevantes.
+     */
+    private List<FeatureImportanceResponseDTO> generateMockTopFeatures(
+            PredictionRequestDTO request,
+            boolean willChurn) {
+
+        List<FeatureImportanceResponseDTO> features = new ArrayList<>();
+
+        // Feature 1: Puntuación de satisfacción (siempre la más importante en nuestro mock)
+        features.add(new FeatureImportanceResponseDTO(
+                "Puntuación de satisfacción",
+                String.valueOf(request.satisfactionScore()),
+                request.satisfactionScore() < 3 ? "positivo" : "negativo"
+        ));
+
+        // Feature 2: Tiene quejas (si está presente)
+        if (request.complain() != null) {
+            features.add(new FeatureImportanceResponseDTO(
+                    "Tiene quejas",
+                    request.complain() ? "Sí" : "No",
+                    request.complain() ? "positivo" : "negativo"
+            ));
+        } else {
+            // Si no hay dato de quejas, usar edad
+            features.add(new FeatureImportanceResponseDTO(
+                    "Edad",
+                    String.valueOf(request.age()),
+                    request.age() > 50 ? "positivo" : "negativo"
+            ));
+        }
+
+        // Feature 3: Es miembro activo
+        features.add(new FeatureImportanceResponseDTO(
+                "Es miembro activo",
+                request.isActiveMember() ? "Sí" : "No",
+                request.isActiveMember() ? "negativo" : "positivo"
+        ));
+
+        log.debug("Generadas {} features mock para explicabilidad", features.size());
+        return features;
     }
 }
