@@ -48,4 +48,10 @@ public interface PredictionRepository extends JpaRepository<Prediction, Long> {
     """)
     Object[] getStatisticsByDateRange(@Param("startDate") LocalDateTime startDate,
                                       @Param("endDate") LocalDateTime endDate);
+
+    /**
+     * Calcular promedio de probabilidad en un período.
+     */
+    @Query("SELECT AVG(p.probability) FROM Prediction p")
+    Double findAverageProbability();
 }
