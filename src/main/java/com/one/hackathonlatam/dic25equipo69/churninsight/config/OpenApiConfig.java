@@ -16,9 +16,8 @@ public class OpenApiConfig {
     public OpenAPI customOpenAPI() {
         final String securitySchemeName = "bearerAuth";
         Server prodServer = new Server()
-                .url("https://churninsight-api.prod.example.com")
-                .description("Production Server");
-
+                .url("http://localhost:8080/api/v1")
+                .description("Local PROD");
         return new OpenAPI()
                 .info(new Info()
                         .title("ChurnInsight API - Production")

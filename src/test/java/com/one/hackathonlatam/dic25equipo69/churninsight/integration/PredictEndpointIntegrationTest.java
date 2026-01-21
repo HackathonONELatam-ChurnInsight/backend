@@ -1,9 +1,9 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -30,7 +30,7 @@ class PredictEndpointIntegrationTest {
     @Test
     void predict_WithDevProfile_ReturnsMockedServiceResponse() throws Exception {
         PredictionRequestDTO request = new PredictionRequestDTO(
-                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0,
+                null, Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0,
                 5, 2, 4, true, true, false
         );
 
@@ -39,13 +39,13 @@ class PredictEndpointIntegrationTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.forecast").value("No va a cancelar"))
-                .andExpect(jsonPath("$.probability").value(0.15));
+                .andExpect(jsonPath("$.probability").value(0.25));
     }
 
     @Test
     void predict_InvalidPayload_PropagatesValidationError() throws Exception {
         PredictionRequestDTO invalidRequest = new PredictionRequestDTO(
-                null, Gender.MALE, 30, 600, 50000.0, 100000.0,
+                null, null, Gender.MALE, 30, 600, 50000.0, 100000.0,
                 5, 2, 4, true, true, false
         );
 

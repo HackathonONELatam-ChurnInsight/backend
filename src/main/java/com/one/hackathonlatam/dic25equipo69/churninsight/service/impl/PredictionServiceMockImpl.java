@@ -47,6 +47,14 @@ public class PredictionServiceMockImpl implements IPredictionService {
         return response;
     }
 
+    /**
+     * Genera predicción mock con explicabilidad para desarrollo en H2.
+     * Simula el comportamiento del modelo ML basándose en satisfactionScore.
+     * Retorna top 3 features simuladas con impacto positivo/negativo.
+     *
+     * @param request datos del cliente
+     * @return predicción mock con forecast, probabilidad y top 3 features simuladas
+     */
     @Override
     public PredictionFullResponseDTO predictWithExplanation(PredictionRequestDTO request) {
         log.debug("Usando predicción MOCK CON EXPLICABILIDAD para desarrollo");

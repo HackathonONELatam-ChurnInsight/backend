@@ -102,9 +102,14 @@ public class PredictionPersistenceService {
     }
 
     /**
-     * Guarda predicción CON feature importances (para explicabilidad).
+     * Guarda predicción CON feature importances en base de datos (para explicabilidad).
+     * Persiste la predicción primero y luego todas las features asociadas en batch.
+     * Traduce nombres técnicos a español y calcula impacto (positivo/negativo).
      *
-     * @throws PredictionPersistenceException si falla el guardado
+     * @param request datos del cliente
+     * @param mlFullResponse respuesta completa del modelo con feature_importances
+     * @return predicción guardada con ID generado y features asociadas
+     * @throws PredictionPersistenceException si falla el guardado en BD
      */
     @Transactional
     public Prediction saveMlPredictionWithFeatures(

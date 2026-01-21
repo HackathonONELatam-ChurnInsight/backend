@@ -72,8 +72,17 @@ public class PredictionServiceImpl implements IPredictionService {
         }
     }
 
+    /**
+     * Realiza predicción de churn con explicabilidad (top 3 features más influyentes).
+     * Llama al modelo ML, persiste la predicción con features y retorna las 3 variables
+     * que más impactaron en la decisión del modelo.
+     *
+     * @param request datos del cliente para realizar la predicción
+     * @return predicción completa con forecast, probabilidad y top 3 features
+     * @throws FeatureExtractionException si las features están vacías o son inválidas
+     */
     @Override
-    public PredictionFullResponseDTO predictWithExplanation(PredictionRequestDTO request) {
+    public PredictionFullResponseDTO predictWithExplanation(PredictionRequestDTO request){
         log.info("Iniciando predicción con explicabilidad para cliente con geography={}, age={}",
                 request.geography(), request.age());
         try {

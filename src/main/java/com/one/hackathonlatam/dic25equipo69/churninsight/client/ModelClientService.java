@@ -1,5 +1,6 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionFullResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
@@ -46,6 +47,8 @@ public class ModelClientService {
         HttpEntity<MLPredictionRequestDTO> entity = new HttpEntity<>(request, headers);
 
         try {
+            log.info("🔍 request.class={}, request={}", request.getClass().getSimpleName(), request);
+
             MLPredictionResponseDTO response = restTemplate.postForObject(
                     modelServiceUrl + "/predict",
                     entity,
@@ -61,7 +64,13 @@ public class ModelClientService {
     }
 
     /**
-     * Llama al endpoint del modelo CON feature importances para explicabilidad.
+     * Llama al endpoint del modelo ML solicitando feature importances para explicabilidad.
+     * Valida que la respuesta contenga el array feature_importances antes de retornar.
+     *
+     * @param request datos del cliente en formato ML (snake_case)
+     * @return respuesta completa con forecast, probability y feature_importances
+     * @throws ModelServiceException si hay error de conexión o la respuesta es vacía
+     * @throws FeatureExtractionException si el modelo no retorna feature_importances
      */
     public MLPredictionFullResponseDTO predictWithFeatures(MLPredictionRequestDTO request) {
         log.info("Enviando petición al modelo DS para predicción con explicabilidad");

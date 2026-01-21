@@ -58,7 +58,7 @@ class PredictionPersistenceServiceTest {
     @BeforeEach
     void setUp() {
         requestDTO = new PredictionRequestDTO(
-                Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
+                null, Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
                 2, 3, true, true, false
         );
 

@@ -126,7 +126,7 @@ public class PredictionController {
     @Operation(
             summary = "Predecir churn para un cliente",
             description = "Recibe atributos del cliente y devuelve una predicción con probabilidad. " +
-                    "Los campos son opcionales; el modelo intentará predecir con la información provista. " +
+                    "El modelo intentará predecir con la información provista. " +
                     "Este endpoint NO incluye explicabilidad (variables relevantes)."
     )
     @io.swagger.v3.oas.annotations.parameters.RequestBody(

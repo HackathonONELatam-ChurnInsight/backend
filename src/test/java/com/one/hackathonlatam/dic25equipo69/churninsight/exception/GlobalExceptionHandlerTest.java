@@ -37,7 +37,7 @@ class GlobalExceptionHandlerTest {
     void handleRestClientException_ReturnsServiceUnavailable() throws Exception {
         // Given
         PredictionRequestDTO request = new PredictionRequestDTO(
-            Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
+            null, Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
         );
 
         when(predictionService.predict(any(PredictionRequestDTO.class)))
@@ -56,7 +56,7 @@ class GlobalExceptionHandlerTest {
     void handleGenericException_ReturnsInternalServerError() throws Exception {
         // Given
         PredictionRequestDTO request = new PredictionRequestDTO(
-            Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
+            null, Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
         );
 
         when(predictionService.predict(any(PredictionRequestDTO.class)))

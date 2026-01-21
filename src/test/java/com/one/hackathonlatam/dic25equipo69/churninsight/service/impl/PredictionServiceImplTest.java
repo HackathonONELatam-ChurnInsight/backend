@@ -42,7 +42,7 @@ class PredictionServiceImplTest {
     @BeforeEach
     void setUp() {
         requestDTO = new PredictionRequestDTO(
-                Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
+                null, Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
                 2, 3, true, true, false
         );
 
@@ -61,7 +61,7 @@ class PredictionServiceImplTest {
 
         when(modelClientService.predict(any(MLPredictionRequestDTO.class)))
                 .thenReturn(mlResponseDTO);
-        when(persistenceService.savePrediction(any(), any()))
+        when(persistenceService.saveMlPrediction(any(), any()))
                 .thenReturn(mockPrediction);
 
         // When
@@ -71,9 +71,8 @@ class PredictionServiceImplTest {
         assertThat(result).isNotNull();
         assertThat(result.forecast()).isEqualTo("Va a cancelar");
         assertThat(result.probability()).isEqualTo(0.85);
-
         verify(modelClientService).predict(any(MLPredictionRequestDTO.class));
-        verify(persistenceService).savePrediction(eq(requestDTO), any(PredictionResponseDTO.class));
+        verify(persistenceService).saveMlPrediction(eq(requestDTO), any(MLPredictionResponseDTO.class));
     }
 
     @Test
@@ -89,7 +88,7 @@ class PredictionServiceImplTest {
 
         when(modelClientService.predict(any(MLPredictionRequestDTO.class)))
                 .thenReturn(noChurnResponse);
-        when(persistenceService.savePrediction(any(), any()))
+        when(persistenceService.saveMlPrediction(any(), any()))
                 .thenReturn(mockPrediction);
 
         // When
@@ -99,9 +98,8 @@ class PredictionServiceImplTest {
         assertThat(result).isNotNull();
         assertThat(result.forecast()).isEqualTo("No va a cancelar");
         assertThat(result.probability()).isEqualTo(0.25);
-
         verify(modelClientService).predict(any(MLPredictionRequestDTO.class));
-        verify(persistenceService).savePrediction(any(), any());
+        verify(persistenceService).saveMlPrediction(any(), any());
     }
 
     @Test
@@ -117,7 +115,7 @@ class PredictionServiceImplTest {
             assertThat(e.getMessage()).contains("Model service error");
         }
 
-        verify(persistenceService, never()).savePrediction(any(), any());
+        verify(persistenceService, never()).saveMlPrediction(any(), any());
     }
 
     @Test
@@ -133,7 +131,7 @@ class PredictionServiceImplTest {
 
         when(modelClientService.predict(any(MLPredictionRequestDTO.class)))
                 .thenReturn(highChurnResponse);
-        when(persistenceService.savePrediction(any(), any()))
+        when(persistenceService.saveMlPrediction(any(), any()))
                 .thenReturn(mockPrediction);
 
         // When
@@ -142,7 +140,6 @@ class PredictionServiceImplTest {
         // Then
         assertThat(result.probability()).isEqualTo(0.95);
         assertThat(result.forecast()).isEqualTo("Va a cancelar");
-
-        verify(persistenceService).savePrediction(eq(requestDTO), any(PredictionResponseDTO.class));
+        verify(persistenceService).saveMlPrediction(eq(requestDTO), any(MLPredictionResponseDTO.class));
     }
 }

@@ -6,7 +6,8 @@ import org.springframework.stereotype.Service;
 import java.util.Map;
 
 /**
- * Servicio para traducir features técnicos a nombres legibles y determinar impacto.
+ * Servicio para traducir features técnicas a nombres legibles en español
+ * y determinar su impacto en la predicción de churn.
  */
 @Service
 public class FeatureExplainerService {
@@ -28,22 +29,34 @@ public class FeatureExplainerService {
 
     /**
      * Traduce el nombre técnico de una feature a su nombre legible en español.
-     * Si no existe traducción, retorna el nombre original.
+     *
+     * @param technicalName nombre técnico de la feature (ej: "age", "balance")
+     * @return nombre traducido en español (ej: "Edad", "Saldo en cuenta") o null si el parámetro es null
      */
     public String translateFeatureName(String technicalName) {
+        if (technicalName == null) {
+            return null;
+        }
         return FEATURE_DISPLAY_NAMES.getOrDefault(technicalName, technicalName);
     }
 
     /**
-     * Determina la dirección del impacto basado en el valor de importancia.
-     * Positivo si importanceValue > 0, Negativo si <= 0
+     * Determina la dirección del impacto basado en el valor de importancia del modelo.
+     *
+     * @param importanceValue valor de importancia retornado por el modelo ML
+     * @return POSITIVE si aumenta probabilidad de churn, NEGATIVE si la reduce
      */
     public ImpactDirection determineImpact(Double importanceValue) {
-        return importanceValue > 0 ? ImpactDirection.POSITIVE : ImpactDirection.NEGATIVE;
+        return importanceValue != null && importanceValue > 0
+                ? ImpactDirection.POSITIVE
+                : ImpactDirection.NEGATIVE;
     }
 
     /**
-     * Convierte ImpactDirection a string para el DTO de respuesta.
+     * Convierte enum ImpactDirection a string en español para respuesta API.
+     *
+     * @param impact dirección del impacto (POSITIVE o NEGATIVE)
+     * @return "positivo" si aumenta churn, "negativo" si lo reduce
      */
     public String impactToString(ImpactDirection impact) {
         return impact == ImpactDirection.POSITIVE ? "positivo" : "negativo";

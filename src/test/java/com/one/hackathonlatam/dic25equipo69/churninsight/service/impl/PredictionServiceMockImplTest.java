@@ -2,6 +2,7 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.service.impl;
 
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionFullResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Prediction;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,8 +35,8 @@ class PredictionServiceMockImplTest {
     @BeforeEach
     void setUp() {
         requestDTO = new PredictionRequestDTO(
-                Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
-                2, 1, true, true, false  // satisfactionScore = 1 (bajo)
+                null, Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
+                2, 1, true, true, false // satisfactionScore = 1 (bajo)
         );
     }
 
@@ -58,7 +59,6 @@ class PredictionServiceMockImplTest {
         assertThat(result).isNotNull();
         assertThat(result.forecast()).isEqualTo("Va a cancelar");
         assertThat(result.probability()).isEqualTo(0.85);
-
         verify(persistenceService).savePrediction(eq(requestDTO), any(PredictionResponseDTO.class));
     }
 
@@ -66,8 +66,8 @@ class PredictionServiceMockImplTest {
     void whenPredictWithHighSatisfaction_thenReturnsNoChurn() {
         // Given - satisfactionScore >= 3
         PredictionRequestDTO highSatisfactionRequest = new PredictionRequestDTO(
-                Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
-                2, 4, true, true, false  // satisfactionScore = 4 (alto)
+                null, Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
+                2, 4, true, true, false // satisfactionScore = 4 (alto)
         );
 
         Prediction mockPrediction = Prediction.builder()
@@ -86,7 +86,6 @@ class PredictionServiceMockImplTest {
         assertThat(result).isNotNull();
         assertThat(result.forecast()).isEqualTo("No va a cancelar");
         assertThat(result.probability()).isEqualTo(0.25);
-
         verify(persistenceService).savePrediction(eq(highSatisfactionRequest), any(PredictionResponseDTO.class));
     }
 
@@ -108,5 +107,73 @@ class PredictionServiceMockImplTest {
         // Then
         verify(persistenceService, times(1))
                 .savePrediction(any(PredictionRequestDTO.class), any(PredictionResponseDTO.class));
+    }
+
+    // ========== TESTS NUEVOS PARA EXPLICABILIDAD ==========
+
+    @Test
+    void whenPredictWithExplanation_withLowSatisfaction_thenReturnsChurnWith3Features() {
+        // Given - satisfactionScore < 3
+        PredictionRequestDTO lowSatisfactionRequest = new PredictionRequestDTO(
+                null, Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
+                2, 2, true, true, false // satisfactionScore = 2 (bajo)
+        );
+
+        // When
+        PredictionFullResponseDTO result = predictionServiceMock.predictWithExplanation(lowSatisfactionRequest);
+
+        // Then
+        assertThat(result).isNotNull();
+        assertThat(result.forecast()).isEqualTo("Va a cancelar");
+        assertThat(result.probability()).isEqualTo(0.85);
+
+        // Verificar que retorna 3 features
+        assertThat(result.topFeatures()).hasSize(3);
+
+        // Verificar que las features tienen estructura correcta
+        assertThat(result.topFeatures().get(0).name()).isNotBlank();
+        assertThat(result.topFeatures().get(0).value()).isNotBlank();
+        assertThat(result.topFeatures().get(0).impact())
+                .isIn("positivo", "negativo");
+    }
+
+    @Test
+    void whenPredictWithExplanation_withHighSatisfaction_thenReturnsNoChurnWith3Features() {
+        // Given - satisfactionScore >= 3
+        PredictionRequestDTO highSatisfactionRequest = new PredictionRequestDTO(
+                null, Geography.FRANCE, null, 35, 700, 2000.0, null, 8,
+                3, 4, true, true, false // satisfactionScore = 4 (alto)
+        );
+
+        // When
+        PredictionFullResponseDTO result = predictionServiceMock.predictWithExplanation(highSatisfactionRequest);
+
+        // Then
+        assertThat(result).isNotNull();
+        assertThat(result.forecast()).isEqualTo("No va a cancelar");
+        assertThat(result.probability()).isEqualTo(0.25);
+
+        // Verificar que retorna 3 features
+        assertThat(result.topFeatures()).hasSize(3);
+    }
+
+    @Test
+    void whenPredictWithExplanation_thenFeaturesAreInSpanish() {
+        // Given
+        PredictionRequestDTO request = new PredictionRequestDTO(
+                null, Geography.GERMANY, null, 50, 600, 1500.0, null, 10,
+                2, 1, false, false, true // satisfactionScore = 1
+        );
+
+        // When
+        PredictionFullResponseDTO result = predictionServiceMock.predictWithExplanation(request);
+
+        // Then - Verificar que los nombres están en español (no en inglés)
+        result.topFeatures().forEach(feature -> {
+            assertThat(feature.name()).doesNotContain("satisfaction");
+            assertThat(feature.name()).doesNotContain("complain");
+            assertThat(feature.name()).doesNotContain("age");
+            assertThat(feature.name()).matches(".*[a-záéíóúñÁÉÍÓÚÑ].*");
+        });
     }
 }
