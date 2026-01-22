@@ -8,6 +8,7 @@ import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -50,5 +51,8 @@ public class Prediction {
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(name = "customer_metadata", columnDefinition = "json")
     private String customerMetadata;
+
+    @OneToMany(mappedBy = "prediction", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<FeatureImportance> featureImportances = new ArrayList<>();
 
 }

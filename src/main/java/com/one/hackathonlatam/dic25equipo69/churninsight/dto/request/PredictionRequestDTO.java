@@ -12,6 +12,15 @@ import jakarta.validation.constraints.*;
 @Schema(name = "PredictionRequest", description = "Datos de entrada para la predicción de churn. Campos opcionales; el modelo intentará predecir con la información disponible.")
 public record PredictionRequestDTO(
 
+        // OPCIONAL - Si no se envía, se genera automáticamente
+        @Schema(
+                description = "Identificador único del cliente en el sistema externo. Si no se proporciona, se generará automáticamente.",
+                example = "CUST-12345",
+                required = false
+        )
+        @Size(max = 50, message = "El customerId no puede exceder 50 caracteres")
+        String customerId,
+
         @Schema(description = "País o región del cliente", example = "Spain")
         @NotNull(message = "El campo 'geography' es obligatorio")
         Geography geography,

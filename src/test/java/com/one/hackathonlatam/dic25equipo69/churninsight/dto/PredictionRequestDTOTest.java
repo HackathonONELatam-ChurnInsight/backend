@@ -24,7 +24,7 @@ class PredictionRequestDTOTest {
 
     private PredictionRequestDTO buildValidRequest() {
         return new PredictionRequestDTO(
-                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0,
+                null, Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0,
                 5, 2, 4, true, true, false
         );
     }
@@ -38,7 +38,7 @@ class PredictionRequestDTOTest {
     @Test
     void nullGeography_ShouldRaiseNotNullViolation() {
         PredictionRequestDTO invalid = new PredictionRequestDTO(
-                null, Gender.MALE, 30, 600, 50000.0, 100000.0,
+                null, null, Gender.MALE, 30, 600, 50000.0, 100000.0,
                 5, 2, 4, true, true, false
         );
 
@@ -50,7 +50,7 @@ class PredictionRequestDTOTest {
     @Test
     void ageBelowMinimum_ShouldRaiseConstraintViolation() {
         PredictionRequestDTO invalid = new PredictionRequestDTO(
-                Geography.FRANCE, Gender.MALE, 17, 600, 50000.0, 100000.0,
+                null, Geography.FRANCE, Gender.MALE, 17, 600, 50000.0, 100000.0,
                 5, 2, 4, true, true, false
         );
 
@@ -62,7 +62,7 @@ class PredictionRequestDTOTest {
     @Test
     void nullActiveMember_ShouldRaiseNotNullViolation() {
         PredictionRequestDTO invalid = new PredictionRequestDTO(
-                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0,
+                null, Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0,
                 5, 2, 4, null, true, false
         );
 
