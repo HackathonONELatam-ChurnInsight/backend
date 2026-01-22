@@ -37,13 +37,13 @@ public record MLPredictionRequestDTO(
         Integer satisfactionScore,
 
         @JsonProperty("IsActiveMember")
-        Boolean isActiveMember,
+        Integer isActiveMember,
 
         @JsonProperty("HasCrCard")
-        Boolean hasCrCard,
+        Integer hasCrCard,
 
         @JsonProperty("Complain")
-        Boolean complain
+        Integer complain
 ) {
     public static MLPredictionRequestDTO from(PredictionRequestDTO predictionRequestDTO) {
         return new MLPredictionRequestDTO(
@@ -56,9 +56,14 @@ public record MLPredictionRequestDTO(
                 predictionRequestDTO.tenure(),
                 predictionRequestDTO.numOfProducts(),
                 predictionRequestDTO.satisfactionScore(),
-                predictionRequestDTO.isActiveMember(),
-                predictionRequestDTO.hasCrCard(),
-                predictionRequestDTO.complain()
+                booleanToInteger(predictionRequestDTO.isActiveMember()),
+                booleanToInteger(predictionRequestDTO.hasCrCard()),
+                booleanToInteger(predictionRequestDTO.complain())
         );
+    }
+
+    private static Integer booleanToInteger(Boolean value) {
+        if (value == null) return null;
+        return value ? 1 : 0;
     }
 }

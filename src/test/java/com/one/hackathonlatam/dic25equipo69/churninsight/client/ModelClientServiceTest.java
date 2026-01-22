@@ -37,7 +37,7 @@ class ModelClientServiceTest {
     void predict_ReturnsResponseFromServer() throws Exception {
         // Given
         MLPredictionRequestDTO request = new MLPredictionRequestDTO(
-                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
+                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, 1, 1, 1
         );
         MLPredictionResponseDTO expectedResponse = new MLPredictionResponseDTO(0, 0.25);
         when(modelClientService.predict(any(MLPredictionRequestDTO.class))).thenReturn(expectedResponse);
