@@ -10,7 +10,14 @@ spring:
 # Servidor
 server:
   port: ${SERVER_PORT:8080}
+  servlet:
+    context-path: /api/v1/
 
 # Logging
+logging:
+  file:
+    name: logs/churn-insight.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
 
 # Documentacion OpenAPI
