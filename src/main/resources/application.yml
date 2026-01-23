@@ -5,7 +5,7 @@ spring:
 
   # Perfil activo
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:dev}
+    active: ${SPRING_PROFILES_ACTIVE:prod}
 
 # Servidor
 server:

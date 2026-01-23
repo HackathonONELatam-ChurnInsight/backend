@@ -3,7 +3,6 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.service.impl;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionFullResponseDTO;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Prediction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -2,7 +2,6 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import com.one.hackathonlatam.dic25equipo69.churninsight.service.IPredictionService;

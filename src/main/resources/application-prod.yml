@@ -3,7 +3,7 @@
 spring:
   # PostgreSQL Database
   datasource:
-    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/churninsight_prod}
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/churninsight}
     username: ${DATABASE_USERNAME:churninsight_user}
     password: ${DATABASE_PASSWORD:churninsight_pass}
     driverClassName: org.postgresql.Driver

@@ -1,4 +1,5 @@
 {
+  "customerId": "CLI-TEST-INVALID-003",
   "geography": "Spain",
   "gender": "Female",
   "age": -5,

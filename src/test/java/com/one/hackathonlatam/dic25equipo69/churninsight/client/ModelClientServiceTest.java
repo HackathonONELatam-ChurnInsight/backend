@@ -2,7 +2,6 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import org.junit.jupiter.api.Disabled;

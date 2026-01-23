@@ -1,9 +1,7 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionFullResponseDTO;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.exception.FeatureExtractionException;
 import com.one.hackathonlatam.dic25equipo69.churninsight.exception.ModelServiceException;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +37,7 @@ public class ModelClientService {
      * Llama al endpoint básico del modelo sin feature importances.
      * Endpoint: POST /predict
      */
-    public MLPredictionResponseDTO predict(MLPredictionRequestDTO request) {
+    public MLPredictionFullResponseDTO predict(MLPredictionRequestDTO request) {
         log.debug("Enviando petición al modelo DS en la URL: {}", modelServiceUrl);
 
         HttpHeaders headers = new HttpHeaders();
@@ -49,10 +47,10 @@ public class ModelClientService {
         try {
             log.info("🔍 request.class={}, request={}", request.getClass().getSimpleName(), request);
 
-            MLPredictionResponseDTO response = restTemplate.postForObject(
+            MLPredictionFullResponseDTO response = restTemplate.postForObject(
                     modelServiceUrl + "/predict",
                     entity,
-                    MLPredictionResponseDTO.class
+                    MLPredictionFullResponseDTO.class
             );
             log.debug("Respuesta recibida del modelo: {}", response);
             return response;

@@ -4,8 +4,7 @@ import com.one.hackathonlatam.dic25equipo69.churninsight.client.ModelClientServi
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionFullResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Prediction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -37,7 +36,7 @@ class PredictionServiceImplTest {
     private PredictionServiceImpl predictionService;
 
     private PredictionRequestDTO requestDTO;
-    private MLPredictionResponseDTO mlResponseDTO;
+    private MLPredictionFullResponseDTO mlResponseDTO;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +46,7 @@ class PredictionServiceImplTest {
         );
 
         // Modelo ML ahora retorna 1 (va a cancelar) o 0 (no va a cancelar)
-        mlResponseDTO = new MLPredictionResponseDTO(1, 0.85);
+        mlResponseDTO = new MLPredictionFullResponseDTO(1, 0.85);
     }
 
     @Test

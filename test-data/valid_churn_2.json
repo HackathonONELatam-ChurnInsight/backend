@@ -1,5 +1,6 @@
 {
-  "geography": "Portugal",
+  "customerId": "CLI-TEST-002",
+  "geography": "Germany",
   "gender": "Male",
   "age": 66,
   "creditScore": 300,

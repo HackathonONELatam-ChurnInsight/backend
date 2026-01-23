@@ -1,90 +1,386 @@
 {
   "info": {
-    "name": "ChurnInsight - Pruebas /predict",
-    "_postman_id": "churninsight-collection-1",
-    "description": "Peticiones para probar /api/v1/predict con cargas válidas e inválidas",
+    "name": "ChurnInsight - Pruebas /predict (Modelo NUEVO v2)",
+    "_postman_id": "churninsight-collection-v2",
+    "description": "Colección para probar el endpoint /api/v1/predict con el modelo NUEVO (customerId obligatorio, PascalCase, Integer forecast, features incluidos)",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "Válido - churn (1)",
+      "name": "✅ Válido - Churn caso 1 (alta probabilidad)",
       "request": {
         "method": "POST",
         "header": [
-          { "key": "Content-Type", "value": "application/json" }
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
         ],
-        "body": { "mode": "raw", "raw": "{{raw_valid_churn_1}}" },
-        "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
+        "body": {
+          "mode": "raw",
+          "raw": "{{raw_valid_churn_1}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/predict",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "predict"]
+        }
       },
       "event": [
         {
           "listen": "test",
           "script": {
             "exec": [
-              "pm.test('Estado 200', function () { pm.response.to.have.status(200); });",
-              "pm.test('Cuerpo contiene \"forecast\" y \"probability\"', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });"
-            ]
+              "pm.test('✅ Estado 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('✅ Respuesta contiene forecast, probability y top_features', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property('forecast');",
+              "    pm.expect(json).to.have.property('probability');",
+              "    pm.expect(json).to.have.property('top_features');",
+              "});",
+              "",
+              "pm.test('✅ Probability está entre 0 y 1', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.probability).to.be.within(0, 1);",
+              "});",
+              "",
+              "pm.test('✅ Forecast es string', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json.forecast).to.be.a('string');",
+              "});",
+              "",
+              "pm.test('✅ Top features es array (puede ser null)', function () {",
+              "    const json = pm.response.json();",
+              "    if (json.top_features !== null) {",
+              "        pm.expect(json.top_features).to.be.an('array');",
+              "    }",
+              "});"
+            ],
+            "type": "text/javascript"
           }
         }
       ]
     },
     {
-      "name": "Válido - churn (2)",
+      "name": "✅ Válido - Churn caso 2 (alta probabilidad)",
       "request": {
         "method": "POST",
-        "header": [ { "key": "Content-Type", "value": "application/json" } ],
-        "body": { "mode": "raw", "raw": "{{raw_valid_churn_2}}" },
-        "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{raw_valid_churn_2}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/predict",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "predict"]
+        }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Estado 200', function () { pm.response.to.have.status(200); });", "pm.test('Cuerpo contiene \"forecast\" y \"probability\"', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });" ] } } ]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('✅ Estado 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('✅ Respuesta tiene estructura correcta', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property('forecast');",
+              "    pm.expect(json).to.have.property('probability');",
+              "    pm.expect(json.probability).to.be.within(0, 1);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
-      "name": "Válido - no churn",
+      "name": "✅ Válido - No churn (baja probabilidad)",
       "request": {
         "method": "POST",
-        "header": [ { "key": "Content-Type", "value": "application/json" } ],
-        "body": { "mode": "raw", "raw": "{{raw_valid_no_churn}}" },
-        "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{raw_valid_no_churn}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/predict",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "predict"]
+        }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Estado 200', function () { pm.response.to.have.status(200); });", "pm.test('Cuerpo contiene \"forecast\" y \"probability\"', function () { const json = pm.response.json(); pm.expect(json).to.have.property('forecast'); pm.expect(json).to.have.property('probability'); pm.expect(json.probability).to.be.within(0, 1); });" ] } } ]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('✅ Estado 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('✅ Respuesta tiene estructura correcta', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property('forecast');",
+              "    pm.expect(json).to.have.property('probability');",
+              "    pm.expect(json.probability).to.be.within(0, 1);",
+              "});",
+              "",
+              "pm.test('✅ Probabilidad es baja (< 0.5 esperado para no churn)', function () {",
+              "    const json = pm.response.json();",
+              "    console.log('Probability:', json.probability);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
-      "name": "Inválido - tipos incorrectos",
+      "name": "❌ Inválido - Tipos incorrectos",
       "request": {
         "method": "POST",
-        "header": [ { "key": "Content-Type", "value": "application/json" } ],
-        "body": { "mode": "raw", "raw": "{{raw_invalid_wrong_types}}" },
-        "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{raw_invalid_wrong_types}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/predict",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "predict"]
+        }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Esperar 400 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('❌ Error de validación (400, 422 o 500)', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([400, 422, 500]);",
+              "});",
+              "",
+              "pm.test('❌ Respuesta contiene mensaje de error', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property('message');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
-      "name": "Inválido - campos numéricos faltantes",
+      "name": "❌ Inválido - Campos numéricos faltantes (null)",
       "request": {
         "method": "POST",
-        "header": [ { "key": "Content-Type", "value": "application/json" } ],
-        "body": { "mode": "raw", "raw": "{{raw_invalid_missing_numeric}}" },
-        "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{raw_invalid_missing_numeric}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/predict",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "predict"]
+        }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Esperar 400 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('❌ Error de validación (400, 422 o 500)', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([400, 422, 500]);",
+              "});",
+              "",
+              "pm.test('❌ Respuesta contiene mensaje de error', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property('message');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     },
     {
-      "name": "Inválido - fuera de rango",
+      "name": "❌ Inválido - Valores fuera de rango",
       "request": {
         "method": "POST",
-        "header": [ { "key": "Content-Type", "value": "application/json" } ],
-        "body": { "mode": "raw", "raw": "{{raw_invalid_out_of_range}}" },
-        "url": { "raw": "http://localhost:8080/api/v1/predict", "protocol": "http", "host": ["localhost"], "port": "8080", "path": ["api", "v1", "predict"] }
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{raw_invalid_out_of_range}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/predict",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "predict"]
+        }
       },
-      "event": [ { "listen": "test", "script": { "exec": [ "pm.test('Esperar 400 o error de validación', function () { pm.expect(pm.response.code).to.be.oneOf([400,422,500]); });" ] } } ]
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('❌ Error de validación (400, 422 o 500)', function () {",
+              "    pm.expect(pm.response.code).to.be.oneOf([400, 422, 500]);",
+              "});",
+              "",
+              "pm.test('❌ Respuesta contiene mensaje de error', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property('message');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "❌ Inválido - Sin customerId (campo obligatorio)",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{{raw_invalid_missing_customerId}}"
+        },
+        "url": {
+          "raw": "{{base_url}}/api/v1/predict",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "predict"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('❌ Error 400 - customerId es obligatorio', function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "pm.test('❌ Error menciona customerId', function () {",
+              "    const json = pm.response.json();",
+              "    const errorText = JSON.stringify(json).toLowerCase();",
+              "    pm.expect(errorText).to.include('customerid');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "📊 GET - Estadísticas de predicciones",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/api/v1/stats",
+          "host": ["{{base_url}}"],
+          "path": ["api", "v1", "stats"]
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "pm.test('✅ Estado 200 OK', function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "pm.test('✅ Respuesta contiene estadísticas', function () {",
+              "    const json = pm.response.json();",
+              "    pm.expect(json).to.have.property('total_predictions');",
+              "    pm.expect(json).to.have.property('churn_count');",
+              "    pm.expect(json).to.have.property('no_churn_count');",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
     }
   ],
   "variable": [
-    { "key": "raw_valid_churn_1", "value": "{\n  \"geography\": \"Spain\",\n  \"gender\": \"Female\",\n  \"age\": 58,\n  \"creditScore\": 420,\n  \"balance\": 12000.50,\n  \"estimatedSalary\": 18000.0,\n  \"tenure\": 1,\n  \"numOfProducts\": 1,\n  \"satisfactionScore\": 1,\n  \"isActiveMember\": false,\n  \"hasCrCard\": false,\n  \"complain\": true\n}" },
-    { "key": "raw_valid_churn_2", "value": "{\n  \"geography\": \"Portugal\",\n  \"gender\": \"Male\",\n  \"age\": 66,\n  \"creditScore\": 300,\n  \"balance\": 8500.00,\n  \"estimatedSalary\": 6000.0,\n  \"tenure\": 2,\n  \"numOfProducts\": 1,\n  \"satisfactionScore\": 1,\n  \"isActiveMember\": false,\n  \"hasCrCard\": false,\n  \"complain\": false\n}" },
-    { "key": "raw_valid_no_churn", "value": "{\n  \"geography\": \"Spain\",\n  \"gender\": \"Female\",\n  \"age\": 29,\n  \"creditScore\": 740,\n  \"balance\": 50.0,\n  \"estimatedSalary\": 45000.0,\n  \"tenure\": 8,\n  \"numOfProducts\": 3,\n  \"satisfactionScore\": 5,\n  \"isActiveMember\": true,\n  \"hasCrCard\": true,\n  \"complain\": false\n}" },
-    { "key": "raw_invalid_wrong_types", "value": "{\n  \"geography\": 123,\n  \"gender\": true,\n  \"age\": \"twenty\",\n  \"creditScore\": \"six hundred\",\n  \"balance\": \"a lot\",\n  \"estimatedSalary\": \"forty\",\n  \"tenure\": \"two\",\n  \"numOfProducts\": \"three\",\n  \"satisfactionScore\": \"high\",\n  \"isActiveMember\": \"yes\",\n  \"hasCrCard\": \"no\",\n  \"complain\": \"false\"\n}" },
-    { "key": "raw_invalid_missing_numeric", "value": "{\n  \"geography\": \"Spain\",\n  \"gender\": \"Male\",\n  \"age\": null,\n  \"creditScore\": null,\n  \"balance\": null,\n  \"estimatedSalary\": null,\n  \"tenure\": null,\n  \"numOfProducts\": null,\n  \"satisfactionScore\": null,\n  \"isActiveMember\": null,\n  \"hasCrCard\": null,\n  \"complain\": null\n}" },
-    { "key": "raw_invalid_out_of_range", "value": "{\n  \"geography\": \"Spain\",\n  \"gender\": \"Female\",\n  \"age\": -5,\n  \"creditScore\": 9999,\n  \"balance\": -1000.0,\n  \"estimatedSalary\": -5000.0,\n  \"tenure\": -10,\n  \"numOfProducts\": -1,\n  \"satisfactionScore\": 99,\n  \"isActiveMember\": true,\n  \"hasCrCard\": true,\n  \"complain\": false\n}" }
+    {
+      "key": "base_url",
+      "value": "http://localhost:8080",
+      "type": "string"
+    },
+    {
+      "key": "raw_valid_churn_1",
+      "value": "{\n  \"customerId\": \"CLI-TEST-001\",\n  \"geography\": \"Spain\",\n  \"gender\": \"Female\",\n  \"age\": 58,\n  \"creditScore\": 420,\n  \"balance\": 12000.50,\n  \"estimatedSalary\": 18000.0,\n  \"tenure\": 1,\n  \"numOfProducts\": 1,\n  \"satisfactionScore\": 1,\n  \"isActiveMember\": false,\n  \"hasCrCard\": false,\n  \"complain\": true\n}",
+      "type": "string"
+    },
+    {
+      "key": "raw_valid_churn_2",
+      "value": "{\n  \"customerId\": \"CLI-TEST-002\",\n  \"geography\": \"Germany\",\n  \"gender\": \"Male\",\n  \"age\": 66,\n  \"creditScore\": 300,\n  \"balance\": 8500.00,\n  \"estimatedSalary\": 6000.0,\n  \"tenure\": 2,\n  \"numOfProducts\": 1,\n  \"satisfactionScore\": 1,\n  \"isActiveMember\": false,\n  \"hasCrCard\": false,\n  \"complain\": false\n}",
+      "type": "string"
+    },
+    {
+      "key": "raw_valid_no_churn",
+      "value": "{\n  \"customerId\": \"CLI-TEST-003\",\n  \"geography\": \"Spain\",\n  \"gender\": \"Female\",\n  \"age\": 29,\n  \"creditScore\": 740,\n  \"balance\": 50.0,\n  \"estimatedSalary\": 45000.0,\n  \"tenure\": 8,\n  \"numOfProducts\": 3,\n  \"satisfactionScore\": 5,\n  \"isActiveMember\": true,\n  \"hasCrCard\": true,\n  \"complain\": false\n}",
+      "type": "string"
+    },
+    {
+      "key": "raw_invalid_wrong_types",
+      "value": "{\n  \"customerId\": \"CLI-TEST-INVALID-001\",\n  \"geography\": 123,\n  \"gender\": true,\n  \"age\": \"twenty\",\n  \"creditScore\": \"six hundred\",\n  \"balance\": \"a lot\",\n  \"estimatedSalary\": \"forty\",\n  \"tenure\": \"two\",\n  \"numOfProducts\": \"three\",\n  \"satisfactionScore\": \"high\",\n  \"isActiveMember\": \"yes\",\n  \"hasCrCard\": \"no\",\n  \"complain\": \"false\"\n}",
+      "type": "string"
+    },
+    {
+      "key": "raw_invalid_missing_numeric",
+      "value": "{\n  \"customerId\": \"CLI-TEST-INVALID-002\",\n  \"geography\": \"Spain\",\n  \"gender\": \"Male\",\n  \"age\": null,\n  \"creditScore\": null,\n  \"balance\": null,\n  \"estimatedSalary\": null,\n  \"tenure\": null,\n  \"numOfProducts\": null,\n  \"satisfactionScore\": null,\n  \"isActiveMember\": null,\n  \"hasCrCard\": null,\n  \"complain\": null\n}",
+      "type": "string"
+    },
+    {
+      "key": "raw_invalid_out_of_range",
+      "value": "{\n  \"customerId\": \"CLI-TEST-INVALID-003\",\n  \"geography\": \"Spain\",\n  \"gender\": \"Female\",\n  \"age\": -5,\n  \"creditScore\": 9999,\n  \"balance\": -1000.0,\n  \"estimatedSalary\": -5000.0,\n  \"tenure\": -10,\n  \"numOfProducts\": -1,\n  \"satisfactionScore\": 99,\n  \"isActiveMember\": true,\n  \"hasCrCard\": true,\n  \"complain\": false\n}",
+      "type": "string"
+    },
+    {
+      "key": "raw_invalid_missing_customerId",
+      "value": "{\n  \"geography\": \"Spain\",\n  \"gender\": \"Female\",\n  \"age\": 29,\n  \"creditScore\": 740,\n  \"balance\": 50.0,\n  \"estimatedSalary\": 45000.0,\n  \"tenure\": 8,\n  \"numOfProducts\": 3,\n  \"satisfactionScore\": 5,\n  \"isActiveMember\": true,\n  \"hasCrCard\": true,\n  \"complain\": false\n}",
+      "type": "string"
+    }
   ]
 }
