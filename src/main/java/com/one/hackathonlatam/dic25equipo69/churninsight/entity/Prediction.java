@@ -25,7 +25,7 @@ import java.util.List;
                 @Index(name = "idx_customer_created", columnList = "customer_id, created_at")
         },
         uniqueConstraints = {
-                // ✅ NUEVO: Constraint único para prevenir duplicados absolutos
+                // Constraint único para prevenir duplicados absolutos
                 @UniqueConstraint(
                         name = "uk_customer_metadata_hash",
                         columnNames = {"customer_id", "metadata_hash"}
@@ -49,7 +49,7 @@ public class Prediction {
     @NotNull(message = "El customer_id es obligatorio")
     private String customerId;
 
-    // ✅ NUEVO: Hash SHA-256 de la metadata para detectar duplicados
+    // Hash SHA-256 de la metadata para detectar duplicados
     @Column(name = "metadata_hash", length = 64, nullable = false)
     @NotNull(message = "El metadata_hash es obligatorio")
     private String metadataHash;
@@ -72,13 +72,13 @@ public class Prediction {
     @Builder.Default
     private List<FeatureImportance> featureImportances = new ArrayList<>();
 
-    // ✅ NUEVO: Método para calcular el hash automáticamente al setear metadata
+    // Calcula el hash automáticamente al setear metadata
     public void setCustomerMetadata(String customerMetadata) {
         this.customerMetadata = customerMetadata;
         this.metadataHash = calculateMetadataHash(customerMetadata);
     }
 
-    // ✅ NUEVO: Cálculo del hash SHA-256
+    // Cálculo del hash SHA-256
     private String calculateMetadataHash(String metadata) {
         if (metadata == null || metadata.isBlank()) {
             throw new IllegalArgumentException("customerMetadata no puede ser null o vacío");
