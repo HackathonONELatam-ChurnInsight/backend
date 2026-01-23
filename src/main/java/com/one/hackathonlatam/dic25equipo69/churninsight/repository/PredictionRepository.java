@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PredictionRepository extends JpaRepository<Prediction, Long> {
@@ -23,6 +24,9 @@ public interface PredictionRepository extends JpaRepository<Prediction, Long> {
     Prediction findTopByCustomerIdOrderByCreatedAtDesc(String customerId);
 
     long countByCustomerId(String customerId);
+
+    // ✅ NUEVO: Buscar predicción duplicada exacta
+    Optional<Prediction> findByCustomerIdAndMetadataHash(String customerId, String metadataHash);
 
     // ========== Métodos por fechas ==========
 

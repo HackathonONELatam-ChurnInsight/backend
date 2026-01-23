@@ -22,7 +22,6 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponseDTO> handleValidationExceptions(MethodArgumentNotValidException ex) {
         log.warn("Error de validación en la petición: {}", ex.getBindingResult().getFieldError().getDefaultMessage());
-
         List<String> details = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
@@ -67,8 +66,6 @@ public class GlobalExceptionHandler {
 
         return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
-
-    // ========== HANDLERS PARA EXPLICABILIDAD ==========
 
     /**
      * Maneja errores relacionados con el servicio de modelo ML.
@@ -125,7 +122,29 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    // ========== HANDLER GENÉRICO ==========
+    /**
+     * Maneja intentos de guardar predicciones duplicadas.
+     * Ocurre cuando ya existe una predicción con el mismo customerId y metadata.
+     * Retorna HTTP 409 Conflict indicando que el recurso ya existe.
+     */
+    @ExceptionHandler(DuplicatePredictionException.class)
+    public ResponseEntity<ErrorResponseDTO> handleDuplicatePredictionException(DuplicatePredictionException ex) {
+        log.warn("Predicción duplicada rechazada para customerId: {} - Predicción existente ID: {}",
+                ex.getCustomerId(), ex.getExistingPredictionId());
+
+        ErrorResponseDTO error = ErrorResponseDTO.builder()
+                .error("Predicción duplicada")
+                .message("Ya existe una predicción idéntica para este cliente")
+                .details(List.of(
+                        ex.getMessage(),
+                        "Si los datos del cliente han cambiado, envíe la nueva información",
+                        "Si desea consultar la predicción existente, use el endpoint GET /api/v1/predictions/" + ex.getCustomerId()
+                ))
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(error, HttpStatus.CONFLICT); // 409 Conflict
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponseDTO> handleGlobalException(Exception ex) {
