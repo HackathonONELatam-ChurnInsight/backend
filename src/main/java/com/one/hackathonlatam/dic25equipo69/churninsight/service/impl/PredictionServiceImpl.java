@@ -115,7 +115,7 @@ public class PredictionServiceImpl implements IPredictionService {
      *
      * @throws FeatureExtractionException si no se pueden obtener las features o están vacías
      */
-    private PredictionFullResponseDTO buildFullResponse(Prediction savedPrediction) {
+    public PredictionFullResponseDTO buildFullResponse(Prediction savedPrediction) {
         try {
             // 1. Obtener top 3 features desde la BD
             List<FeatureImportance> topFeatures = featureImportanceRepository.findTopNByPredictionId(

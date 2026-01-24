@@ -1,7 +1,8 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.client;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLBatchPredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.batch.MLBatchPredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionFullResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.exception.FeatureExtractionException;
@@ -11,26 +12,29 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 /**
- * Cliente HTTP para microservicio Python DS (http://localhost:8000/predict)
- * Implementado con RestTemplate para compatibilidad con Spring Web MVC.
+ * Cliente HTTP para microservicio Python DS
  */
 @Profile("prod")
 @Slf4j
 @Component
 public class ModelClientService {
 
+    private final WebClient webClient;
     private final RestTemplate restTemplate;
     private final String modelServiceUrl;
 
     public ModelClientService(
-            @Value("${model.service.url}") String modelServiceUrl
+            WebClient webClient, @Value("${model.service.url}") String modelServiceUrl
     ) {
+        this.webClient = webClient;
         this.restTemplate = new RestTemplate();
         this.modelServiceUrl = modelServiceUrl;
     }
@@ -61,6 +65,31 @@ public class ModelClientService {
             log.error("Error al comunicar con el servicio de modelo: {}", e.getMessage());
             throw e;
         }
+    }
+
+    public MLPredictionResponseDTO predict2(MLPredictionRequestDTO request) {
+
+        return webClient.post()
+                .uri("/predict")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(
+                        HttpStatusCode::is4xxClientError,
+                        response -> response.bodyToMono(String.class)
+                                .map(body -> new IllegalArgumentException(
+                                        "Error 4xx desde ML: " + body
+                                ))
+                )
+                .onStatus(
+                        HttpStatusCode::is5xxServerError,
+                        response -> response.bodyToMono(String.class)
+                                .map(body -> new IllegalStateException(
+                                        "Error 5xx desde ML: " + body
+                                ))
+                )
+                .bodyToMono(MLPredictionResponseDTO.class)
+                .block();
     }
 
     /**
@@ -114,4 +143,53 @@ public class ModelClientService {
         }
     }
 
+    public MLBatchPredictionResponseDTO predictBatch(MLBatchPredictionRequestDTO request) {
+
+        log.debug("Enviando petición al modelo DS en la URL: {}", modelServiceUrl);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<MLBatchPredictionRequestDTO> entity = new HttpEntity<>(request, headers);
+
+        try {
+            log.info("🔍 request.class={}, request={}", request.getClass().getSimpleName(), request);
+
+            MLBatchPredictionResponseDTO response = restTemplate.postForObject(
+                    modelServiceUrl + "/predict_batch",
+                    entity,
+                    MLBatchPredictionResponseDTO.class
+            );
+            log.debug("Respuesta recibida del modelo: {}", response);
+            return response;
+
+        } catch (Exception e) {
+            log.error("Error al comunicar con el servicio de modelo: {}", e.getMessage());
+            throw e;
+        }
+    }
+
+    public MLBatchPredictionResponseDTO predictBatch2(MLBatchPredictionRequestDTO request) {
+
+        return webClient.post()
+                .uri("/predict_batch")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(request)
+                .retrieve()
+                .onStatus(
+                        HttpStatusCode::is4xxClientError,
+                        response -> response.bodyToMono(String.class)
+                                .map(body -> new IllegalArgumentException(
+                                        "Error 4xx desde ML: " + body
+                                ))
+                )
+                .onStatus(
+                        HttpStatusCode::is5xxServerError,
+                        response -> response.bodyToMono(String.class)
+                                .map(body -> new IllegalStateException(
+                                        "Error 5xx desde ML: " + body
+                                ))
+                )
+                .bodyToMono(MLBatchPredictionResponseDTO.class)
+                .block();
+    }
 }

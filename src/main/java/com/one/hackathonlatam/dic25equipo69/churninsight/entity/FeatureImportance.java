@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "feature_importance")
+@Table(name = "prediction_feature_importance")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

@@ -82,6 +82,11 @@ public class PredictionServiceMockImpl implements IPredictionService {
         return response;
     }
 
+    @Override
+    public PredictionFullResponseDTO buildFullResponse(Prediction savedPrediction) {
+        return null;
+    }
+
     /**
      * Genera top 3 features mock para desarrollo basándose en los datos del request.
      * La lógica simula qué variables serían más relevantes.

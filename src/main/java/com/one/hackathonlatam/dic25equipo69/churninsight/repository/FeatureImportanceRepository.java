@@ -32,7 +32,7 @@ public interface FeatureImportanceRepository extends JpaRepository<FeatureImport
      * @param limit Número máximo de features a retornar (ej: 3)
      * @return Lista de las top N feature importances
      */
-    @Query(value = "SELECT * FROM feature_importance WHERE prediction_record_id = :predictionId " +
+    @Query(value = "SELECT * FROM prediction_feature_importance WHERE prediction_record_id = :predictionId " +
             "ORDER BY rank_position ASC LIMIT :limit", nativeQuery = true)
     List<FeatureImportance> findTopNByPredictionId(@Param("predictionId") Long predictionId,
                                                    @Param("limit") int limit);

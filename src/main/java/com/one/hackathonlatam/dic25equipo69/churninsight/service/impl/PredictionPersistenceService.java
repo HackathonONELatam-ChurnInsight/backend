@@ -7,12 +7,15 @@ import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLFeatureI
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionFullResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.entity.BatchPredictionResult;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Customer;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.FeatureImportance;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Prediction;
 import com.one.hackathonlatam.dic25equipo69.churninsight.exception.PredictionPersistenceException;
 import com.one.hackathonlatam.dic25equipo69.churninsight.mapper.CustomerMapper;
+import com.one.hackathonlatam.dic25equipo69.churninsight.mapper.FeatureImportanceMapper;
 import com.one.hackathonlatam.dic25equipo69.churninsight.mapper.PredictionMapper;
+import com.one.hackathonlatam.dic25equipo69.churninsight.repository.BatchPredictionResultRepository;
 import com.one.hackathonlatam.dic25equipo69.churninsight.repository.CustomerRepository;
 import com.one.hackathonlatam.dic25equipo69.churninsight.repository.FeatureImportanceRepository;
 import com.one.hackathonlatam.dic25equipo69.churninsight.repository.PredictionRepository;
@@ -41,6 +44,8 @@ public class PredictionPersistenceService {
     private final ObjectMapper objectMapper;
     private final FeatureImportanceRepository featureImportanceRepository;
     private final FeatureExplainerService featureExplainerService;
+    private final FeatureImportanceMapper featureImportanceMapper;
+    private final BatchPredictionResultRepository batchPredictionResultRepository;
 
     public PredictionPersistenceService(
             PredictionRepository predictionRepository,
@@ -49,7 +54,7 @@ public class PredictionPersistenceService {
             PredictionMapper predictionMapper,
             ObjectMapper objectMapper,
             FeatureImportanceRepository featureImportanceRepository,
-            FeatureExplainerService featureExplainerService) {
+            FeatureExplainerService featureExplainerService, FeatureImportanceMapper featureImportanceMapper, BatchPredictionResultRepository batchPredictionResultRepository) {
         this.predictionRepository = predictionRepository;
         this.customerRepository = customerRepository;
         this.customerMapper = customerMapper;
@@ -57,6 +62,8 @@ public class PredictionPersistenceService {
         this.objectMapper = objectMapper;
         this.featureImportanceRepository = featureImportanceRepository;
         this.featureExplainerService = featureExplainerService;
+        this.featureImportanceMapper = featureImportanceMapper;
+        this.batchPredictionResultRepository = batchPredictionResultRepository;
     }
 
     /**
@@ -186,13 +193,19 @@ public class PredictionPersistenceService {
      * Obtiene o crea un Customer usando MapStruct.
      */
     private Customer getOrCreateCustomer(PredictionRequestDTO request) {
-        String customerId = UUID.randomUUID().toString();
+
+        Customer customer = customerMapper.toEntity(request);
+        if (customer.getCustomerId() == null) customer.setCustomerId(UUID.randomUUID().toString());
+
+        return customerRepository.save(customer);
+
+        /*String customerId = UUID.randomUUID().toString();
         return customerRepository.findByCustomerId(customerId)
                 .orElseGet(() -> {
                     // Usa el mapper en vez de builder manual
                     Customer newCustomer = customerMapper.toEntity(request, customerId);
                     return customerRepository.save(newCustomer);
-                });
+                });*/
     }
 
     private String serializeMetadata(PredictionRequestDTO request) {
@@ -229,5 +242,62 @@ public class PredictionPersistenceService {
     public Object[] getStatistics(LocalDateTime startDate, LocalDateTime endDate) {
         log.debug("Obteniendo estadísticas entre {} y {}", startDate, endDate);
         return predictionRepository.getStatisticsByDateRange(startDate, endDate);
+    }
+
+    public void saveBatch(
+            List<PredictionRequestDTO> requests,
+            List<MLPredictionFullResponseDTO> mlPredictions,
+            String batchId,
+            int rowNumber) {
+
+        List<Customer> customers = new ArrayList<>();
+        List<Prediction> predictions = new ArrayList<>();
+        List<FeatureImportance> allFeatures = new ArrayList<>();
+
+        for (int i = 0; i < requests.size(); i++) {
+            PredictionRequestDTO request = requests.get(i);
+            MLPredictionFullResponseDTO mlPrediction = mlPredictions.get(i);
+
+            Customer customer = customerMapper.toEntity(request);
+            customers.add(customer);
+
+            Prediction prediction = predictionMapper.toEntity(mlPrediction);
+
+            prediction.setCustomer(customer);
+            predictions.add(prediction);
+
+            if (mlPrediction.featureImportances() != null) {
+                for (MLFeatureImportanceDTO mlFeature : mlPrediction.featureImportances()) {
+
+                    FeatureImportance feature = FeatureImportance.builder()
+                            .prediction(prediction)
+                            .name(mlFeature.featureName())
+                            .featureValue(mlFeature.featureValue())
+                            .rankPosition(mlFeature.ranking())
+                            .impactDirection(featureExplainerService.determineImpact(mlFeature.importanceValue()))
+                            .displayName(featureExplainerService.translateFeatureName(mlFeature.featureName()))
+                            .build();
+
+                    allFeatures.add(feature);
+                }
+            }
+        }
+
+        customerRepository.saveAll(customers);
+        predictionRepository.saveAll(predictions);
+        featureImportanceRepository.saveAll(allFeatures);
+
+        List<BatchPredictionResult> batchResults = new ArrayList<>();
+        for (int i = 0; i < predictions.size(); i++) {
+            BatchPredictionResult result = BatchPredictionResult.builder()
+                    .batchId(batchId)
+                    .rowNumber(rowNumber + i)
+                    .predictionId(predictions.get(i).getId())
+                    .isSuccess(true)
+                    .build();
+            batchResults.add(result);
+        }
+
+        batchPredictionResultRepository.saveAll(batchResults);
     }
 }

@@ -3,6 +3,7 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.service;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionFullResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Prediction;
 
 public interface IPredictionService {
 
@@ -15,4 +16,6 @@ public interface IPredictionService {
      * Realiza predicción con explicabilidad.
      */
     PredictionFullResponseDTO predictWithExplanation(PredictionRequestDTO request);
+
+    PredictionFullResponseDTO buildFullResponse(Prediction savedPrediction);
 }

@@ -16,4 +16,10 @@ public record PredictionFullResponseDTO(
 
         @JsonProperty("top_features")
         List<FeatureImportanceResponseDTO> topFeatures
-) {}
+) {
+        public String getRiskLevel() {
+                if (probability >= 0.7) return "HIGH";
+                if (probability >= 0.4) return "MEDIUM";
+                return "LOW";
+        }
+}

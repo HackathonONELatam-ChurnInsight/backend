@@ -5,6 +5,8 @@ import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Customer;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
+import java.util.UUID;
+
 /**
  * Mapper para conversión entre PredictionRequestDTO y Customer.
  */
@@ -25,8 +27,15 @@ public interface CustomerMapper {
     @Mapping(target = "isActiveMember", source = "dto.isActiveMember")
     @Mapping(target = "hasCrCard", source = "dto.hasCrCard")
     @Mapping(target = "complain", source = "dto.complain")
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "predictions", ignore = true)
     Customer toEntity(PredictionRequestDTO dto, String customerId);
+
+
+    Customer toEntity(PredictionRequestDTO request);
+
+    default String map(String customerId) {
+        if (customerId == null) {
+            return UUID.randomUUID().toString();
+        }
+        return customerId;
+    }
 }
