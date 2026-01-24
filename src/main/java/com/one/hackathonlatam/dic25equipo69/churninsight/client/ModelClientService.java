@@ -72,7 +72,6 @@ public class ModelClientService {
      */
     public MLPredictionFullResponseDTO predictWithFeatures(MLPredictionRequestDTO request) {
         log.info("Enviando petición al modelo DS para predicción con explicabilidad");
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         HttpEntity<MLPredictionRequestDTO> entity = new HttpEntity<>(request, headers);
@@ -99,9 +98,10 @@ public class ModelClientService {
                     response.forecast(),
                     response.probability(),
                     response.featureImportances().size());
-
             return response;
-
+        } catch (FeatureExtractionException | ModelServiceException e) {
+            // Re-lanzar excepciones propias sin envolver
+            throw e;
         } catch (RestClientException e) {
             log.error("Error al comunicarse con el modelo DS: {}", e.getMessage());
             throw new ModelServiceException(

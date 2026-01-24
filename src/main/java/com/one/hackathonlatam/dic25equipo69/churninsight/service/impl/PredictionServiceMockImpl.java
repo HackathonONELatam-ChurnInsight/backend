@@ -26,27 +26,30 @@ public class PredictionServiceMockImpl implements IPredictionService {
 
     @Override
     public PredictionFullResponseDTO predict(PredictionRequestDTO request) {
-        log.info("🎭 [MOCK] Generando predicción mock para customerId: {}", request.customerId());
+        log.info("MOCK Generando predicción mock para customerId {}", request.customerId());
 
-        // Generar predicción aleatoria
-        int forecast = random.nextBoolean() ? 1 : 0;
-        double probability = forecast == 1
-                ? 0.6 + (random.nextDouble() * 0.4)  // 0.6 - 1.0 si va a cancelar
-                : 0.0 + (random.nextDouble() * 0.4); // 0.0 - 0.4 si no cancela
+        int forecast;
+        double probability;
 
-        // Redondear a 2 decimales
-        probability = Math.round(probability * 100.0) / 100.0;
+        if (request.satisfactionScore() != null && request.satisfactionScore() <= 2) {
+            forecast = 1;  // Va a cancelar
+            probability = 0.85;
+        } else {
+            forecast = 0;  // No cancela
+            probability = 0.25;
+        }
 
         String forecastText = forecast == 1 ? "Va a cancelar" : "No va a cancelar";
 
         // Generar features mock (Top 3)
         List<FeatureImportanceResponseDTO> topFeatures = generateMockFeatures(request);
 
-        log.info("🎭 [MOCK] Predicción generada: forecast={}, probability={}, features={}",
+        log.info("MOCK Predicción generada forecast={}, probability={}, features={}",
                 forecastText, probability, topFeatures.size());
 
         return new PredictionFullResponseDTO(forecastText, probability, topFeatures);
     }
+
 
     /**
      * Genera features mock basadas en los datos del request.

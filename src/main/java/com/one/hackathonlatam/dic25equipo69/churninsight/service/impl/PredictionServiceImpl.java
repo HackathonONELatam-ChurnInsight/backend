@@ -12,10 +12,12 @@ import com.one.hackathonlatam.dic25equipo69.churninsight.service.FeatureExplaine
 import com.one.hackathonlatam.dic25equipo69.churninsight.client.ModelClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Profile("prod")
 @Service
 @RequiredArgsConstructor
 @Slf4j
