@@ -37,4 +37,4 @@ springdoc:
   show-actuator: false
 
 backend:
-  base-url: ${BACKEND_BASE_URL:http://localhost:8080}
+  base-url: ${BACKEND_BASE_URL:http://localhost:8080/api/v1}
