@@ -35,3 +35,6 @@ springdoc:
     default-models-expand-depth: 1
     default-model-expand-depth: 1
   show-actuator: false
+
+backend:
+  base-url: ${BACKEND_BASE_URL:http://localhost:8080}
