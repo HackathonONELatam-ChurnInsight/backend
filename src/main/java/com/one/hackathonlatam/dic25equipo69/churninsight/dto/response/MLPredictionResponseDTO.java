@@ -14,8 +14,10 @@ public record MLPredictionResponseDTO(
 ) {
         public PredictionResponseDTO toPredictionResponseDTO() {
                 return new PredictionResponseDTO(
+                        null,
                         this.forecast.equals(1)? "Va a cancelar" : "No va a cancelar",
-                        this.probability // redondear
+                        this.probability, // redondear
+                        null
                 );
         }
 }

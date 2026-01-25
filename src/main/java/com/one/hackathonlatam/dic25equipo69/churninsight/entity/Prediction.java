@@ -33,12 +33,12 @@ public class Prediction {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_fk_id", nullable = false)
     private Customer customer;
-    
-    @Column(name = "prediction_result", nullable = false)
-    private Boolean predictionResult;
-    
-    @Column(name = "probability", precision = 5, scale = 4, nullable = false)
-    private BigDecimal probability;
+
+    @Column(name = "prediction_result", nullable = false, columnDefinition = "VARCHAR(255)")
+    private String predictionResult;
+
+    @Column(name = "probability", nullable = false)
+    private Double probability;
     
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)

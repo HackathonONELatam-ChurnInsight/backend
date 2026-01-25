@@ -2,6 +2,7 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.controller;
 
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.StatsDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.service.IPredictionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -13,10 +14,9 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Controller para endpoint de predicción de churn
@@ -67,5 +67,17 @@ public class PredictionController {
         
         log.info("Predicción completada exitosamente: {}", response.forecast());
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Obtener historial reciente", description = "Devuelve las últimas 10 predicciones registradas")
+    @GetMapping("/history")
+    public ResponseEntity<List<PredictionResponseDTO>> getHistory() {
+        return ResponseEntity.ok(predictionService.getRecentHistory());
+    }
+
+    @Operation(summary = "Obtener estadísticas", description = "KPIs generales del sistema")
+    @GetMapping("/stats")
+    public ResponseEntity<StatsDTO> getStats() {
+        return ResponseEntity.ok(predictionService.getStats());
     }
 }

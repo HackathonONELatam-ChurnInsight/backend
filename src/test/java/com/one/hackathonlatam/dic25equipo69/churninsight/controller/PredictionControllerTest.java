@@ -14,10 +14,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.time.LocalDateTime;
+import java.util.UUID;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(PredictionController.class)
 @ActiveProfiles("dev")
@@ -38,7 +42,12 @@ class PredictionControllerTest {
         PredictionRequestDTO request = new PredictionRequestDTO(
             Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
         );
-        PredictionResponseDTO response = new PredictionResponseDTO("NO_CHURN", 0.25);
+        PredictionResponseDTO response = new PredictionResponseDTO(
+                UUID.randomUUID().toString(),   // 1. ID Simulado
+                "No va a cancelar",                     // 2. Predicción
+                0.15,                           // 3. Probabilidad
+                LocalDateTime.now().toString()  // 4. Fecha Simulada
+        );
 
         when(predictionService.predict(any(PredictionRequestDTO.class))).thenReturn(response);
 
@@ -48,8 +57,9 @@ class PredictionControllerTest {
                 .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.forecast").value("NO_CHURN"))
-                .andExpect(jsonPath("$.probability").value(0.25));
+                .andExpect(jsonPath("$.forecast").value("No va a cancelar"))
+                .andExpect(jsonPath("$.probability").value(0.15))
+                .andExpect(jsonPath("$.clientId").exists());
     }
 
     @Test
