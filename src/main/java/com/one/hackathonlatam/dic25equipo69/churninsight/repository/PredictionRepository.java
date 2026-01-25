@@ -50,6 +50,8 @@ public interface PredictionRepository extends JpaRepository<Prediction, Long> {
     """)
     Object[] getStatisticsByDateRange(@Param("startDate") LocalDateTime startDate,
                                       @Param("endDate") LocalDateTime endDate);
+    // Para obtener las últimas 10 predicciones (para la tabla del dashboard)
+    List<Prediction> findTop10ByOrderByCreatedAtDesc();
 
     /**
      * Contar total de predicciones en un período.
@@ -94,4 +96,7 @@ public interface PredictionRepository extends JpaRepository<Prediction, Long> {
             @Param("endDate") LocalDateTime endDate,
             Pageable pageable
     );
+    // Query optimizada para contar cuántos "Va a cancelar" (o el string que devuelva Python) hay
+    @Query("SELECT COUNT(p) FROM Prediction p WHERE p.predictionResult = 'Va a cancelar' OR p.predictionResult = 'CHURN'")
+    long countChurnRisks();
 }

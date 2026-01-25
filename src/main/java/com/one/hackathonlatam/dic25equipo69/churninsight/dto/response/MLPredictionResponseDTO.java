@@ -17,10 +17,13 @@ public record MLPredictionResponseDTO(
 ) {
         public PredictionResponseDTO toPredictionResponseDTO() {
                 return new PredictionResponseDTO(
+                        null,
                         this.forecast.equals(1)? "Va a cancelar" : "No va a cancelar",
                         BigDecimal.valueOf(this.probability)
                                 .setScale(2, RoundingMode.HALF_UP)
-                                .doubleValue()
+                                .doubleValue(),
+                        this.probability, // redondear
+                        null
                 );
         }
 }

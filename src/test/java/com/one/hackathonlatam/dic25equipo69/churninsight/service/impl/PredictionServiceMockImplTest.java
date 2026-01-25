@@ -6,11 +6,17 @@ import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.Prediction
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.entity.Prediction;
 import org.junit.jupiter.api.BeforeEach;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.StatsDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.List;
 
 import java.math.BigDecimal;
 
@@ -88,6 +94,8 @@ class PredictionServiceMockImplTest {
         assertThat(result.probability()).isEqualTo(0.25);
         verify(persistenceService).savePrediction(eq(highSatisfactionRequest), any(PredictionResponseDTO.class));
     }
+    @InjectMocks
+    private PredictionServiceMockImpl service;
 
     @Test
     void whenPredictCalled_thenAlwaysPersists() {
@@ -175,5 +183,28 @@ class PredictionServiceMockImplTest {
             assertThat(feature.name()).doesNotContain("age");
             assertThat(feature.name()).matches(".*[a-záéíóúñÁÉÍÓÚÑ].*");
         });
+    }
+
+    // Test para subir cobertura (Stats)
+    @Test
+    void getStats_ReturnsMockedData() {
+        // When
+        StatsDTO stats = service.getStats();
+
+        // Then
+        assertThat(stats).isNotNull();
+        assertThat(stats.totalEvaluated()).isGreaterThan(0);
+    }
+
+    // Test para subir cobertura (History)
+    @Test
+    void getRecentHistory_ReturnsMockedList() {
+        // When
+        List<PredictionResponseDTO> history = service.getRecentHistory();
+
+        // Then
+        assertThat(history).isNotNull();
+        assertThat(history).isNotEmpty();
+        assertThat(history.size()).isEqualTo(3); // El mock devuelve 3 fijos
     }
 }
