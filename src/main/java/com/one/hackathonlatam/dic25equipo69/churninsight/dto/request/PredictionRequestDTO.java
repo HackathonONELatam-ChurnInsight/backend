@@ -4,13 +4,23 @@ import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
+import lombok.Builder;
 
 /**
  * DTO de entrada para POST /api/v1/predict
- * Basado en el contrato de integración versión 3.
  */
+@Builder
 @Schema(name = "PredictionRequest", description = "Datos de entrada para la predicción de churn. Campos opcionales; el modelo intentará predecir con la información disponible.")
 public record PredictionRequestDTO(
+
+        // OPCIONAL - Si no se envía, se genera automáticamente
+        @Schema(
+                description = "Identificador único del cliente en el sistema externo. Si no se proporciona, se generará automáticamente.",
+                example = "CUST-12345",
+                required = false
+        )
+        @Size(max = 50, message = "El customerId no puede exceder 50 caracteres")
+        String customerId,
 
         @Schema(description = "País o región del cliente", example = "Spain")
         @NotNull(message = "El campo 'geography' es obligatorio")

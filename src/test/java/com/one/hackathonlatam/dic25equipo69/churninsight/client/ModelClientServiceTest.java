@@ -1,8 +1,8 @@
 package com.one.hackathonlatam.dic25equipo69.churninsight.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.PredictionRequestDTO;
-import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.PredictionResponseDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.request.MLPredictionRequestDTO;
+import com.one.hackathonlatam.dic25equipo69.churninsight.dto.response.MLPredictionResponseDTO;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Gender;
 import com.one.hackathonlatam.dic25equipo69.churninsight.dto.enums.Geography;
 import org.junit.jupiter.api.Disabled;
@@ -36,11 +36,11 @@ class ModelClientServiceTest {
     @Test
     void predict_ReturnsResponseFromServer() throws Exception {
         // Given
-        PredictionRequestDTO request = new PredictionRequestDTO(
-                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
+        MLPredictionRequestDTO request = new MLPredictionRequestDTO(
+                Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, 1, 1, 1
         );
-        PredictionResponseDTO expectedResponse = new PredictionResponseDTO("NO_CHURN", 0.25);
-        when(modelClientService.predict(any(PredictionRequestDTO.class))).thenReturn(expectedResponse);
+        MLPredictionResponseDTO expectedResponse = new MLPredictionResponseDTO(0, 0.25);
+        when(modelClientService.predict(any(MLPredictionRequestDTO.class))).thenReturn(expectedResponse);
 
         // When & Then
         mockMvc.perform(post("/api/v1/predict")  // ← Endpoint del controller

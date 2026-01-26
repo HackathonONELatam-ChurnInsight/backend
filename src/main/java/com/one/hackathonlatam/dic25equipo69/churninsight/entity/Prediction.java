@@ -3,11 +3,10 @@ package com.one.hackathonlatam.dic25equipo69.churninsight.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,7 +27,8 @@ public class Prediction {
     @Column(name = "id")
     @EqualsAndHashCode.Include
     private Long id;
-    
+
+    // Un customer puede tener otras predicciones de distintos modelos
     // Relación con Customer - FK apunta a customer.id (clave primaria)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_fk_id", nullable = false)
@@ -43,12 +43,8 @@ public class Prediction {
     @CreationTimestamp
     @Column(name = "created_at", updatable = false, nullable = false)
     private LocalDateTime createdAt;
-    
-    /**
-     * Metadata JSON con datos del cliente para análisis estadístico
-     */
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "customer_metadata", columnDefinition = "json")
-    private String customerMetadata;
+
+    @OneToMany(mappedBy = "prediction", fetch = FetchType.LAZY)
+    private List<FeatureImportance> featureImportances = new ArrayList<>();
 
 }

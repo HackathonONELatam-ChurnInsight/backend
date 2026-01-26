@@ -8,24 +8,25 @@ spring:
     password: ${DATABASE_PASSWORD:churninsight_pass}
     driverClassName: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 20
-      minimum-idle: 5
+      maximum-pool-size: 8
+      minimum-idle: 4
       idle-timeout: 300000
       max-lifetime: 1200000
       connection-timeout: 30000
-      leak-detection-threshold: 60000
+      leak-detection-threshold: 0
 
   # JPA/Hibernate
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
+        generate_statistics: false
         format_sql: false
         jdbc:
-          batch_size: 20
+          batch_size: 100
         order_inserts: true
         order_updates: true
 
@@ -38,10 +39,17 @@ spring:
 model:
   service:
     url: ${MODEL_SERVICE_URL:http://localhost:8000}
-    timeout: 5000
+    timeout: 30000
 
 # Logging
 logging:
   level:
     root: WARN
     com.one.hackathonlatam.dic25equipo69.churninsight: INFO
+
+#Para pruebas en swagger
+springdoc:
+  swagger-ui:
+    enabled: true
+  api-docs:
+    enabled: true
