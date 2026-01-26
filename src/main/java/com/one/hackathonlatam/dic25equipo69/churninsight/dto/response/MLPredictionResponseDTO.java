@@ -16,14 +16,15 @@ public record MLPredictionResponseDTO(
         Double probability
 ) {
         public PredictionResponseDTO toPredictionResponseDTO() {
+                // Corrección: Se envían exactamente 4 argumentos
                 return new PredictionResponseDTO(
-                        null,
-                        this.forecast.equals(1)? "Va a cancelar" : "No va a cancelar",
+                        null, // ID (se genera luego)
+                        (this.forecast != null && this.forecast == 1) ? "Va a cancelar" : "No va a cancelar",
+                        // Probabilidad redondeada
                         BigDecimal.valueOf(this.probability)
                                 .setScale(2, RoundingMode.HALF_UP)
                                 .doubleValue(),
-                        this.probability, // redondear
-                        null
+                        null // Fecha (se genera luego)
                 );
         }
 }

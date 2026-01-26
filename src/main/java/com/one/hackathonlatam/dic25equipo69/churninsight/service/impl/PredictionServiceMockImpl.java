@@ -45,8 +45,12 @@ public class PredictionServiceMockImpl implements IPredictionService {
         double probability = willChurn ? 0.85 : 0.25;
         String forecast = willChurn ? "Va a cancelar" : "No va a cancelar";
 
-        PredictionResponseDTO response = new PredictionResponseDTO(forecast, probability);
-
+        PredictionResponseDTO response = new PredictionResponseDTO(
+                UUID.randomUUID().toString(), // ID Simulado
+                forecast,
+                probability,
+                LocalDateTime.now().toString() // Fecha simulada
+        );
         // Persistir predicción mock
         Prediction savedPrediction = persistenceService.savePrediction(request, response);
         log.info("Predicción MOCK persistida con ID={}", savedPrediction.getId());

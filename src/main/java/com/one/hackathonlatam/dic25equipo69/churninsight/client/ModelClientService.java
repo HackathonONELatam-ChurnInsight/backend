@@ -22,7 +22,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 /**
  * Cliente HTTP para microservicio Python DS
  */
-@Profile("prod")
+@Profile({"prod", "dev"})
 @Slf4j
 @Component
 public class ModelClientService {
