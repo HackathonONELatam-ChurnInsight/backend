@@ -33,7 +33,7 @@ class PredictionRepositoryTest {
     void setUp() {
         testCustomer = Customer.builder()
                 .customerId("test-customer-001")
-                .geography(Geography.SPAIN)     // ✅ MAYÚSCULAS
+                .geography(Geography.SPAIN) // ✅ MAYÚSCULAS
                 .age(42)
                 .creditScore(650)
                 .balance(new BigDecimal("1000.00"))
@@ -52,7 +52,6 @@ class PredictionRepositoryTest {
                 .customer(testCustomer)
                 .predictionResult(true)
                 .probability(new BigDecimal("0.8500"))
-                .customerMetadata("{\"test\":\"data\"}")
                 .build();
 
         // When
@@ -82,46 +81,15 @@ class PredictionRepositoryTest {
     }
 
     @Test
-    void whenFindByPredictionResult_thenReturnsFiltered() {
+    void whenCountByPredictionResult_thenReturnsCorrectCount() {
         // Given
         createPrediction(true, "0.85");
         createPrediction(true, "0.90");
         createPrediction(false, "0.25");
 
         // When
-        List<Prediction> churnPredictions = predictionRepository.findByPredictionResult(true);
-        List<Prediction> noChurnPredictions = predictionRepository.findByPredictionResult(false);
-
-        // Then
-        assertThat(churnPredictions).hasSize(2);
-        assertThat(noChurnPredictions).hasSize(1);
-    }
-
-    @Test
-    void whenFindByCreatedAtBetween_thenReturnsInRange() {
-        // Given
-        LocalDateTime start = LocalDateTime.now().minusDays(1);
-        LocalDateTime end = LocalDateTime.now().plusDays(1);
-        createPrediction(true, "0.85");
-
-        // When
-        List<Prediction> predictions = predictionRepository
-                .findByCreatedAtBetween(start, end);
-
-        // Then
-        assertThat(predictions).hasSize(1);
-    }
-
-    @Test
-    void whenCountByPredictionResult_thenReturnsCount() {
-        // Given
-        createPrediction(true, "0.85");
-        createPrediction(true, "0.90");
-        createPrediction(false, "0.25");
-
-        // When
-        Long churnCount = predictionRepository.countByPredictionResult(true);
-        Long noChurnCount = predictionRepository.countByPredictionResult(false);
+        long churnCount = predictionRepository.countByPredictionResult(true);
+        long noChurnCount = predictionRepository.countByPredictionResult(false);
 
         // Then
         assertThat(churnCount).isEqualTo(2L);
@@ -135,13 +103,16 @@ class PredictionRepositoryTest {
         entityManager.flush();
 
         // Esperar para asegurar timestamp diferente
-        try { Thread.sleep(10); } catch (InterruptedException e) {}
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+        }
 
         Prediction latest = createPrediction(false, "0.25");
         entityManager.flush();
 
         // When
-        Prediction result = predictionRepository.findLatestByCustomerId(testCustomer.getId());
+        Prediction result = predictionRepository.findFirstByCustomerIdOrderByCreatedAtDesc(testCustomer.getId());
 
         // Then
         assertThat(result).isNotNull();
@@ -153,7 +124,6 @@ class PredictionRepositoryTest {
                 .customer(testCustomer)
                 .predictionResult(result)
                 .probability(new BigDecimal(probability))
-                .customerMetadata("{}")
                 .build();
         return entityManager.persistAndFlush(prediction);
     }

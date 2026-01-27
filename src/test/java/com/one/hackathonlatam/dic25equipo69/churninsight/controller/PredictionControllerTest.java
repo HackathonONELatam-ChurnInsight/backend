@@ -36,9 +36,9 @@ class PredictionControllerTest {
     void predict_ValidRequest_ReturnsOk() throws Exception {
         // Given
         PredictionRequestDTO request = new PredictionRequestDTO(
-           null, Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false
-        );
-        PredictionResponseDTO response = new PredictionResponseDTO("NO_CHURN", 0.25);
+                null, Geography.FRANCE, Gender.MALE, 30, 600, 50000.0, 100000.0, 5, 2, 4, true, true, false);
+        PredictionResponseDTO response = new PredictionResponseDTO("test-client-id", "NO_CHURN", 0.25,
+                "2026-01-27T10:00:00");
 
         when(predictionService.predict(any(PredictionRequestDTO.class))).thenReturn(response);
 
@@ -56,21 +56,21 @@ class PredictionControllerTest {
     void predict_InvalidRequest_ReturnsBadRequest() throws Exception {
         // Given - usando un valor JSON raw con valor inválido para geography
         String invalidRequestJson = """
-            {
-                "geography": "Invalid",
-                "gender": "Male",
-                "age": 30,
-                "creditScore": 600,
-                "balance": 50000.0,
-                "estimatedSalary": 100000.0,
-                "tenure": 5,
-                "numOfProducts": 2,
-                "satisfactionScore": 4,
-                "isActiveMember": true,
-                "hasCrCard": true,
-                "complain": false
-            }
-            """;
+                {
+                    "geography": "Invalid",
+                    "gender": "Male",
+                    "age": 30,
+                    "creditScore": 600,
+                    "balance": 50000.0,
+                    "estimatedSalary": 100000.0,
+                    "tenure": 5,
+                    "numOfProducts": 2,
+                    "satisfactionScore": 4,
+                    "isActiveMember": true,
+                    "hasCrCard": true,
+                    "complain": false
+                }
+                """;
 
         // When & Then
         mockMvc.perform(post("/predict")
