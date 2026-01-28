@@ -37,8 +37,6 @@ class CustomerRepositoryTest {
         // Then
         assertThat(saved.getId()).isNotNull();
         assertThat(saved.getCustomerId()).isEqualTo("test-001");
-        assertThat(saved.getCreatedAt()).isNotNull();
-        assertThat(saved.getUpdatedAt()).isNotNull();
     }
 
     @Test

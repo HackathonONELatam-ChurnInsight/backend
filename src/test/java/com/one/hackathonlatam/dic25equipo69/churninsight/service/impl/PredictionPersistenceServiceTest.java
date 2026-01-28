@@ -59,10 +59,9 @@ class PredictionPersistenceServiceTest {
     void setUp() {
         requestDTO = new PredictionRequestDTO(
                 null, Geography.SPAIN, null, 42, 650, 1000.0, null, 5,
-                2, 3, true, true, false
-        );
+                2, 3, true, true, false);
 
-        responseDTO = new PredictionResponseDTO("Va a cancelar", 0.85);
+        responseDTO = new PredictionResponseDTO("test-client-id", "Va a cancelar", 0.85, "2026-01-27T10:00:00");
 
         mockCustomer = Customer.builder()
                 .id(1L)
@@ -135,7 +134,7 @@ class PredictionPersistenceServiceTest {
         // Given
         LocalDateTime start = LocalDateTime.now().minusDays(7);
         LocalDateTime end = LocalDateTime.now();
-        Object[] mockStats = new Object[]{10L, 6L, 4L};
+        Object[] mockStats = new Object[] { 10L, 6L, 4L };
         when(predictionRepository.getStatisticsByDateRange(start, end))
                 .thenReturn(mockStats);
 
